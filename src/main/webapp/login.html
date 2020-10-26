@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/mdui.min.css">
+</head>
+
+<body class="mdui-theme-layout-light mdui-theme-accent-red mdui-theme-primary-red">
+
+    <header class="mdui-appbar mdui-appbar-fixed">
+        <div class="mdui-toolbar mdui-color-theme">
+            <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
+                <i class="mdui-icon material-icons">menu</i>
+            </span>
+            <a href="." class="mdui-typo-headline mdui-hidden-xs">Concordia Forum</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
+                <i class="mdui-icon material-icons">person</i>
+            </span>
+        </div>
+    </header>
+
+    <section class="main-box">
+        <div class="login mdui-shadow-2">
+            <div class="locklogo"><i class="mdui-icon material-icons">lock</i></div>
+            <div class="login-text">Login</div>
+            <div class="input-area">
+
+                <div class="mdui-textfield mdui-textfield-floating-label" id="username-field">
+                    <label class="mdui-textfield-label">Username</label>
+                    <input class="mdui-textfield-input" type="text" id="username" />
+                </div>
+
+                <div class="mdui-textfield mdui-textfield-floating-label" id="password-field">
+                    <label class="mdui-textfield-label">Password</label>
+                    <input class="mdui-textfield-input" type="password" id="password" />
+                     <div class="mdui-textfield-error" style="display: none" id="error-message"></div>
+                </div>
+
+            </div>
+
+            <button class="login-btn mdui-btn mdui-color-theme-accent mdui-ripple" id="login-btn">Login</button>
+
+            <div class="mdui-text-color-theme register-btn">Register</div>
+        </div>
+
+    </section>
+
+    <footer class="footer mdui-text-color-theme">
+        Team Member: Tianxiang Ying, Bowen Yang, Yanqi Zhang, Xuan Li
+    </footer>
+
+    <script src="js/mdui.min.js"></script>
+    <script src="js/login.js"></script>
+</body>
+
+</html>

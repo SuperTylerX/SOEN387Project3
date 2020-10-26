@@ -1,0 +1,74 @@
+html,
+body {
+    background-color: #fafafa !important;
+}
+
+#user-dropdown-menu {
+    top: 55px !important;
+}
+
+.container {
+    width: 780px;
+    margin: 90px auto;
+}
+
+.container .post-list .post-item {
+    padding: 30px;
+    margin-top: 20px;
+    overflow: hidden;
+    background-color: #fff;
+    position: relative;
+}
+
+.container .post-list .post-item .mdui-card-primary {
+    padding: 0
+}
+
+.container .post-list .post-item .mdui-card-menu {
+    top: 28px;
+    right: 20px;
+}
+
+.container .post-list .post-item .title {
+    box-sizing: border-box;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: left;
+}
+
+.container .post-list .post-item .content {
+    margin-top: 20px;
+}
+
+.container .post-list .post-item .attach-file {
+    margin-top: 20px;
+}
+
+.container .post-list .post-item .mdui-card-primary-subtitle .item:nth-child(2) {
+    padding-left: 10px;
+}
+
+.container .post-list .post-item .mdui-card-primary-subtitle .item i {
+    padding-right: 3px;
+}
+
+#create_post-dialog {
+    height: 450px;
+}
+
+#create_post-dialog .submit-btn {
+    margin-top: 13px;
+    float: right;
+    overflow: hidden;
+}
+
+#update-user-dialog {
+    height: 280px;
+}
+
+#update-user-dialog button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}

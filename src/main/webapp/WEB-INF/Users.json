@@ -1,0 +1,16 @@
+{
+  "userList": [
+    {
+      "userId": 1,
+      "userName": "tianxiang",
+      "userEmail": "XXX@XXX.com",
+      "userPassword": "ab36e4910bc92ee62b59088b2b587e9a7ec085d023be265d1cfcf044b8d80941"
+    },
+    {
+      "userId": 2,
+      "userName": "bowen",
+      "userEmail": "XXX@XXX.com",
+      "userPassword": "794a87b3a7b4710b5bb186cfad145c60d6571a2b611f52aeeb8246599cdcd28c"
+    }
+  ]
+}

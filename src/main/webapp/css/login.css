@@ -1,0 +1,66 @@
+html {
+    background-color: #fafafa;
+}
+
+.main-box {
+    background: #fafafa;
+    margin-top: 180px;
+}
+
+.main-box .login {
+    background-color: #fff;
+    width: 400px;
+    height: 380px;
+    margin: 0 auto;
+    padding: 25px 8px;
+    box-sizing: border-box;
+}
+
+.main-box .login .locklogo {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #F50057;
+    border-radius: 50%;
+}
+
+.main-box .login .locklogo .mdui-icon {
+    color: white;
+    text-align: center;
+    display: block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+}
+
+.main-box .login .login-text {
+    text-align: center;
+    font-size: 22px;
+    padding-top: 5px;
+    font-weight: 400;
+}
+
+.main-box .login .input-area {
+    width: 350px;
+    margin: 0 auto 15px;
+}
+
+.main-box .login .login-btn {
+    margin: 0 auto;
+    width: 350px;
+    display: block;
+}
+
+.main-box .login .register-btn {
+    float: right;
+    padding: 21px 18px 0 0;
+    cursor: pointer;
+}
+
+.footer {
+    position: fixed;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    background-color: #fafafa;
+}

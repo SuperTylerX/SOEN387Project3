@@ -1,0 +1,84 @@
+package model;
+
+import static config.AppConfig.PASSWORD_SALT;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import utils.Encrypt;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
+public class UserManager {
+
+    public static final String CONFIG_FILE = UserManager.class.getClassLoader().getResource("../../WEB-INF/Users.json").getPath().replace("%20", " ");
+
+    private ArrayList<User> userList;
+
+    private static final UserManager userManager = new UserManager();
+
+    private UserManager() {
+        userList = new ArrayList<>();
+        this.loadUserList();
+    }
+
+    public static UserManager getInstance() {
+        return userManager;
+    }
+
+    public void loadUserList() {
+        // TODO: Read the user.json File, Create the userlist
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = null;
+
+        try {
+            jsonObject = (JSONObject) jsonParser.parse(new FileReader(CONFIG_FILE));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray list = (JSONArray) jsonObject.get("userList");
+        for (Object o : list) {
+            Map user = (Map) o;
+            String username = (String) user.get("userName");
+            String password = (String) user.get("userPassword");
+            String email = (String) user.get("userEmail");
+            long userId = (long) user.get("userId");
+            userList.add(new User(userId, username, email, password));
+        }
+    }
+
+    public User authUser(String username, String password) {
+        String encryptPassword = Encrypt.sha256EncryptSalt(password, PASSWORD_SALT);
+        for(User user : userList){
+            if (user.getUserName().equals(username) && user.getUserPassword().equals(encryptPassword)){
+                return user.clone();
+            }
+        }
+        return null;
+    }
+
+    public void updatePassword(int userID, String password) {
+        String encryptPassword = Encrypt.sha256EncryptSalt(password, PASSWORD_SALT);
+        // TODO: Update the specific password in the userlist
+
+        this.updateConfigFile();
+    }
+
+    public void updateEmail(int userID, String email) {
+        // TODO: Update the specific Email in the userlist
+
+        this.updateConfigFile();
+    }
+
+    public void updateConfigFile() {
+        // TODO: Update users.json File
+    }
+
+
+}
