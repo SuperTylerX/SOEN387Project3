@@ -63,22 +63,4 @@ public class UserManager {
         return null;
     }
 
-    public void updatePassword(int userID, String password) {
-        String encryptPassword = Encrypt.sha256EncryptSalt(password, PASSWORD_SALT);
-        // TODO: Update the specific password in the userlist
-
-        this.updateConfigFile();
-    }
-
-    public void updateEmail(int userID, String email) {
-        // TODO: Update the specific Email in the userlist
-
-        this.updateConfigFile();
-    }
-
-    public void updateConfigFile() {
-        // TODO: Update users.json File
-    }
-
-
 }

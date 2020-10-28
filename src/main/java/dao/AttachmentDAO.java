@@ -6,7 +6,7 @@ public class AttachmentDAO {
 
     public void createAttachment(String attachName) {
         Attachment attachment = new Attachment(attachName);
-            
+
     }
 
     public void updateAttachmentID(int attachID, int postID) {

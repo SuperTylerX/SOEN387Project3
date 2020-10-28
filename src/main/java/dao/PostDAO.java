@@ -7,7 +7,6 @@ import java.util.Set;
 
 public class PostDAO {
 
-
     //    TODO: probably we need a service layer to handle the logic process, not in DAO...
     public Post createPost(String title, String content, int postAuthorID, int postAttachID) {
 
@@ -20,12 +19,6 @@ public class PostDAO {
         // Should get the postID
         int postID = 0; // for example;
         post.setPostID(postID);
-
-        // TODO: Update the attachment
-
-
-        AttachmentDAO attachmentDAO = new AttachmentDAO();
-        attachmentDAO.updateAttachmentID(postAttachID, postID);
 
         return post;
     }
@@ -41,7 +34,6 @@ public class PostDAO {
 
         // TODO: update a post(database)
 
-        // TODO: update the associated attachment
 
         //return ture if successful update
         return true;

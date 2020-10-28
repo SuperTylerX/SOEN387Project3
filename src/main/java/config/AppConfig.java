@@ -6,8 +6,8 @@ public class AppConfig {
     public static final String PASSWORD_SALT = "r$/i7&f{$F!bfz|q-1JmvVxFzjV]$mufk/PC,(`+3mV.S[i>,;Zw+! ds#h0k{P}";
 
     public static final String JDBC_Driver = "com.mysql.cj.jdbc.Driver";
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/";
+    public static final String DB_URL = "jdbc:mysql://140.238.144.2:3306/";
     public static final String DB_NAME = "soen387project2";
-    public static final String DB_USER = "root";
-    public static final String DB_PASSWORD = "";
+    public static final String DB_USER = "soen387";
+    public static final String DB_PASSWORD = "soen387A+";
 }
