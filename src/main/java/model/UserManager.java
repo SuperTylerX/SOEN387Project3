@@ -55,12 +55,21 @@ public class UserManager {
 
     public User authUser(String username, String password) {
         String encryptPassword = Encrypt.sha256EncryptSalt(password, PASSWORD_SALT);
-        for(User user : userList){
-            if (user.getUserName().equals(username) && user.getUserPassword().equals(encryptPassword)){
+        for (User user : userList) {
+            if (user.getUserName().equals(username) && user.getUserPassword().equals(encryptPassword)) {
                 return user.clone();
             }
         }
         return null;
     }
 
+    public String getUserNameById(int id) {
+        for (int i = 0; i < userList.size(); i++) {
+            if (id == userList.get(i).getUserId()) {
+                return userList.get(i).getUserName();
+            }
+        }
+
+        return null;
+    }
 }

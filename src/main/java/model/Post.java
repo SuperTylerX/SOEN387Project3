@@ -6,11 +6,13 @@ public class Post {
 
     private int postID;
     private int postAuthorID;
+    private String postAuthorName;
     private String postTitle;
     private String postContent;
     private long postCreatedDate;
     private long postModifiedDate;
     private Attachment attachment;
+
 
     public Post() {
     }
@@ -38,6 +40,14 @@ public class Post {
 
     public void setPostAuthorID(int postAuthorID) {
         this.postAuthorID = postAuthorID;
+    }
+
+    public String getPostAuthorName() {
+        return postAuthorName;
+    }
+
+    public void setPostAuthorName(String postAuthorName) {
+        this.postAuthorName = postAuthorName;
     }
 
     public String getPostTitle() {
@@ -70,5 +80,13 @@ public class Post {
 
     public void setPostModifiedDate(long postModifiedDate) {
         this.postModifiedDate = postModifiedDate;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 }

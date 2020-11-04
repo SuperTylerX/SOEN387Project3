@@ -10,12 +10,12 @@ import static config.AppConfig.ATTACH_DIR;
 public class Attachment {
 
     private int attachID;
-    private int attachPostID;
     private String attachName;
     private long attachSize;
     private String attachMIME;
 
-    private String attachURL;
+
+
 
     // Used for first created
     public Attachment(String attachName) {
@@ -23,24 +23,53 @@ public class Attachment {
         this.initAttach();
     }
 
-    public Attachment(int attachID, int attachPostID, String attachName, int attachSize, String attachMIME) {
+    public Attachment(int attachID, String attachName, int attachSize, String attachMIME) {
         this.attachID = attachID;
-        this.attachPostID = attachPostID;
+
         this.attachName = attachName;
         this.attachSize = attachSize;
         this.attachMIME = attachMIME;
     }
 
-    private void initAttach() {
-        this.attachURL = ATTACH_DIR + this.attachName;
+    public Attachment() {
+    }
 
-        try {
-            this.attachMIME = Files.probeContentType(Paths.get(this.attachURL));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //KB
-        this.attachSize= new File(attachURL).length();
+    private void initAttach() {
+
+    }
+
+    public int getAttachID() {
+        return attachID;
+    }
+
+    public void setAttachID(int attachID) {
+        this.attachID = attachID;
+    }
+
+
+
+    public String getAttachName() {
+        return attachName;
+    }
+
+    public void setAttachName(String attachName) {
+        this.attachName = attachName;
+    }
+
+    public long getAttachSize() {
+        return attachSize;
+    }
+
+    public void setAttachSize(long attachSize) {
+        this.attachSize = attachSize;
+    }
+
+    public String getAttachMIME() {
+        return attachMIME;
+    }
+
+    public void setAttachMIME(String attachMIME) {
+        this.attachMIME = attachMIME;
     }
 
 

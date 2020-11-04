@@ -29,7 +29,6 @@ public class AttachController extends HttpServlet {
         }
         long userId = (long) request.getSession().getAttribute("userId");
 
-
     }
 
     // Delete a existed attachment
