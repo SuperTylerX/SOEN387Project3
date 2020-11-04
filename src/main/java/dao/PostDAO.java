@@ -1,8 +1,15 @@
 package dao;
 
+import model.Attachment;
 import model.Post;
+import model.UserManager;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class PostDAO {
@@ -39,8 +46,42 @@ public class PostDAO {
         return true;
     }
 
-    public Set<Post> ReadPosts(int pageNum) {
+    public ArrayList<Post> readPosts() {
+        ArrayList<Post> posts = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        try {
 
-        return null;
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from posts,attachment where post_attach_id=attach_id order by post_modified_date desc limit 10");
+            while (rs.next()) {
+                Post p = new Post();
+                p.setPostID(rs.getInt("post_id"));
+
+                int authorId = rs.getInt("post_author_id");
+                String username = UserManager.getInstance().getUserNameById(authorId);
+                p.setPostAuthorID(authorId);
+                p.setPostAuthorName(username);
+                p.setPostContent(rs.getString("post_content"));
+                p.setPostCreatedDate(rs.getLong("post_created_date"));
+                p.setPostModifiedDate(rs.getLong("post_modified_date"));
+                p.setPostTitle(rs.getString("post_title"));
+                Attachment att = new Attachment();
+                att.setAttachID(rs.getInt("attach_id"));
+                att.setAttachName(rs.getString("attach_name"));
+                p.setAttachment(att);
+                posts.add(p);
+            }
+            return posts;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

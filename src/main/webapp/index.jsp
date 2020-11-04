@@ -52,28 +52,28 @@
         <div class="post-list">
             <div class="mdui-shadow-2 post-item" v-for="item in postList">
                 <div class="mdui-card-menu">
-                    <button class="mdui-btn mdui-btn-icon mdui-text-color-black" :id="'post-'+ item.postId +'-btn'"
-                            @click="moreOptions(item.postId)">
+                    <button class="mdui-btn mdui-btn-icon mdui-text-color-black" :id="'post-'+ item.postID +'-btn'"
+                            @click="moreOptions(item.postID)">
                         <i class="mdui-icon material-icons">more_vert</i>
                     </button>
-                    <ul class="mdui-menu" :id="'post-'+ item.postId +'-menu'">
+                    <ul class="mdui-menu" :id="'post-'+ item.postID +'-menu'">
                         <li class="mdui-menu-item"><a class="mdui-ripple"><i
                                 class="mdui-menu-item-icon mdui-icon material-icons">edit</i>Edit</a></li>
-                        <li class="mdui-menu-item" @click="deletePost(item.postId)"><a class="mdui-ripple delete-btn"><i
+                        <li class="mdui-menu-item" @click="deletePost(item.postID)"><a class="mdui-ripple delete-btn"><i
                                 class="mdui-menu-item-icon mdui-icon material-icons">delete</i>Delete</a></li>
                     </ul>
                 </div>
                 <div class="mdui-card-primary">
                     <div class="mdui-card-primary-title">{{item.postTitle}}</div>
                     <div class="mdui-card-primary-subtitle">
-                        <span class="item"><i class="el-icon-user"></i>{{item.postAuthor}}</span>
-                        <span class="item"><i class="el-icon-time"></i>{{item.postPublishedDate}}</span>
+                        <span class="item"><i class="el-icon-user"></i>{{item.postAuthorName}}</span>
+                        <span class="item"><i class="el-icon-time"></i>{{item.postModifiedDate}}</span>
                     </div>
                 </div>
                 <div class="content">{{item.postContent}}</div>
                 <div class="mdui-chip attach-file">
                     <span class="mdui-chip-icon"><i class="mdui-icon material-icons">attach_file</i></span>
-                    <span class="mdui-chip-title">{{item.attachment.attachTitle}}</span>
+                    <span class="mdui-chip-title">{{item.attachment.attachName}}</span>
                 </div>
             </div>
         </div>

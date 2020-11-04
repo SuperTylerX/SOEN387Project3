@@ -2,28 +2,7 @@ new Vue({
     el: '#vue',
     data: function () {
         return {
-            postList: [{
-                "postId": 1,
-                "postTitle": "This is a title",
-                "postAuthor": "Bob",
-                "postPublishedDate": "2020-10-23 23:32:32(Updated)",
-                "postContent": "balabala",
-                "attachment": {
-                    "attachID": 1,
-                    "attachTitle": "hello.txt"
-                }
-            },
-                {
-                    "postId": 2,
-                    "postTitle": "This is a title",
-                    "postAuthor": "Bob",
-                    "postPublishedDate": "2020-10-23 23:32:32(Updated)",
-                    "postContent": "balabala",
-                    "attachment": {
-                        "attachID": 2,
-                        "attachTitle": "hello.html"
-                    }
-                }
+            postList: [
             ],
             newPost: {
                 title: "",
@@ -151,5 +130,11 @@ new Vue({
     mounted: function () {
         var self = this;
         this.tab = new mdui.Tab('#update-user-tabs');
+        axios.get("post").then(function (res){
+            var result = res.data;
+            if (result.status === 200){
+                self.postList = result.data;
+            }
+        })
     }
 })
