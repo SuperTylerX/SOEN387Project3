@@ -1,9 +1,12 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Date;
 
 public class Post {
 
+    @Expose
     private int postID;
     private long postAuthorID;
     private String postAuthorName;

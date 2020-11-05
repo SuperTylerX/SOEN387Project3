@@ -62,7 +62,7 @@ public class UserManager {
         return null;
     }
 
-    public String getUserNameById(int id) {
+    public String getUserNameById(long id) {
         for (int i = 0; i < userList.size(); i++) {
             if (id == userList.get(i).getUserId()) {
                 return userList.get(i).getUserName();
