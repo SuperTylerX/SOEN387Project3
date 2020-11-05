@@ -1,14 +1,12 @@
 package model;
 
-import static config.AppConfig.PASSWORD_SALT;
-
+import config.AppConfig;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import utils.Encrypt;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class UserManager {
     }
 
     public void loadUserList() {
-        // TODO: Read the user.json File, Create the userlist
+
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = null;
 
@@ -54,7 +52,8 @@ public class UserManager {
     }
 
     public User authUser(String username, String password) {
-        String encryptPassword = Encrypt.sha256EncryptSalt(password, PASSWORD_SALT);
+
+        String encryptPassword = Encrypt.sha256EncryptSalt(password, AppConfig.getInstance().PASSWORD_SALT);
         for (User user : userList) {
             if (user.getUserName().equals(username) && user.getUserPassword().equals(encryptPassword)) {
                 return user.clone();
