@@ -11,6 +11,12 @@
       "userName": "bowen",
       "userEmail": "XXX@XXX.com",
       "userPassword": "794a87b3a7b4710b5bb186cfad145c60d6571a2b611f52aeeb8246599cdcd28c"
+    },
+    {
+      "userId": 3,
+      "userName": "yanqi",
+      "userEmail": "XXX@XXX.com",
+      "userPassword": "023c49a707a4df602acd2e7fb1148d9a1004573f41afa097511c44ef435a32eb"
     }
   ]
 }

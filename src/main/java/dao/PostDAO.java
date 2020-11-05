@@ -7,25 +7,68 @@ import model.UserManager;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class PostDAO {
 
     //    TODO: probably we need a service layer to handle the logic process, not in DAO...
-    public Post createPost(String title, String content, int postAuthorID, int postAttachID) {
+    public int createPost(Post post, int attachID) {
 
         Connection connection = DBConnection.getConnection();
 
-        Post post = new Post(title, content, postAuthorID);
+        try {
+            String query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date,post_attach_id) VALUES(?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        // TODO: Update database
+            ps.setString(1, post.getPostTitle());
+            ps.setString(2, post.getPostContent());
+            ps.setInt(3, (int) post.getPostAuthorID());
+            ps.setLong(4, post.getPostCreatedDate());
+            ps.setLong(5, post.getPostModifiedDate());
+            ps.setInt(6, attachID);
 
-        // Should get the postID
-        int postID = 0; // for example;
-        post.setPostID(postID);
+            int i = ps.executeUpdate();
 
-        return post;
+            // get the postID
+            if (i == 1) {
+
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+//                        System.out.println(generatedKeys.getInt(1));
+                        post.setPostID(generatedKeys.getInt(1));
+                    } else {
+                        throw new SQLException("Creating post failed, no PostID obtained.");
+                    }
+                }
+            }
+
+            // set the postID
+            int postID = post.getPostID();
+            post.setPostID(postID);
+
+            // get attachment from DB
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM attachment WHERE attach_id=" + attachID);
+
+            if (rs.next()) {
+                Attachment att = new Attachment();
+                att.setAttachID(rs.getInt("attach_id"));
+                att.setAttachName(rs.getString("attach_name"));
+                att.setAttachSize(rs.getLong("attach_size"));
+                att.setAttachMIME(rs.getString("attach_mime"));
+                post.setAttachment(att);
+            }
+            return postID;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return -1;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean deletePost(int postID) {
@@ -80,13 +123,30 @@ public class PostDAO {
         }
     }
 
-    public boolean updatePost(int postID, String title, String content, int postAttachID) {
+    public boolean updatePost(Post post, int postId, int attachId) {
 
-        // TODO: update a post(database)
+        Connection connection = DBConnection.getConnection();
 
+        try {
+            PreparedStatement ps = connection.prepareStatement("UPDATE posts SET post_title=?,post_content=?,post_modified_date=?,post_attach_id=? WHERE post_id=?");
 
-        //return ture if successful update
-        return true;
+            ps.setString(1, post.getPostTitle());
+            ps.setString(2, post.getPostContent());
+            ps.setLong(3, post.getPostModifiedDate());
+            ps.setInt(4, attachId);
+            ps.setInt(5, postId);
+
+            int i = ps.executeUpdate();
+
+            if (i == 1) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return false;
     }
 
     public ArrayList<Post> readPosts() {
