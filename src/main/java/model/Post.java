@@ -5,7 +5,7 @@ import java.util.Date;
 public class Post {
 
     private int postID;
-    private int postAuthorID;
+    private long postAuthorID;
     private String postAuthorName;
     private String postTitle;
     private String postContent;
@@ -18,7 +18,7 @@ public class Post {
     }
 
     //    This constructor used for first creating a post
-    public Post(String postTitle, String postContent, int postAuthorID) {
+    public Post(String postTitle, String postContent, long postAuthorID) {
         this.postAuthorID = postAuthorID;
         this.postTitle = postTitle;
         this.postContent = postContent;
@@ -34,7 +34,7 @@ public class Post {
         this.postID = postID;
     }
 
-    public int getPostAuthorID() {
+    public long getPostAuthorID() {
         return postAuthorID;
     }
 

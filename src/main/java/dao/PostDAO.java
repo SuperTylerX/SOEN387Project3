@@ -4,10 +4,7 @@ import model.Attachment;
 import model.Post;
 import model.UserManager;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,10 +28,36 @@ public class PostDAO {
     }
 
     public boolean deletePost(int postID) {
+        Connection connection = DBConnection.getConnection();
+        try {
+            String query = "delete from posts where post_id = ? ;";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, postID);
+            int i = ps.executeUpdate();
+            return i == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-        // TODO: delete a post(database), return ture if successful delete
-
-        return true;
+    public boolean checkValidOwner(long userId, int postID) {
+        Connection connection = DBConnection.getConnection();
+        try {
+            String query = "select * from posts where post_id = ? AND post_author_id = ?;";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, postID);
+            ps.setLong(2, userId);
+            ResultSet rs = ps.executeQuery();
+            int cnt=0;
+            while (rs.next()){
+                cnt++;
+            }
+            return cnt == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean updatePost(int postID, String title, String content, int postAttachID) {
