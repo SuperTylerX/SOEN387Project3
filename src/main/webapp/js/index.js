@@ -2,8 +2,7 @@ new Vue({
     el: '#vue',
     data: function () {
         return {
-            postList: [
-            ],
+            postList: [],
             newPost: {
                 title: "",
                 content: "",
@@ -25,8 +24,8 @@ new Vue({
             var self = this;
             mdui.confirm("Are You Sure?", "This post will be deleted", function () {
                 axios({
-                    method: 'post',
-                    url: 'http://httpbin.org/post',
+                    method: 'delete',
+                    url: 'post',
                     data: {
                         postId: postId
                     },
@@ -37,10 +36,11 @@ new Vue({
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function (data) {
-                    console.log(data)
-                    self.postList = self.postList.filter(function (item) {
-                        return item.postId !== postId;
-                    })
+                    if (data.data.status === 200) {
+                        self.postList = self.postList.filter(function (item) {
+                            return item.postID !== postId;
+                        })
+                    }
                 })
 
 
@@ -130,9 +130,9 @@ new Vue({
     mounted: function () {
         var self = this;
         this.tab = new mdui.Tab('#update-user-tabs');
-        axios.get("post").then(function (res){
+        axios.get("post").then(function (res) {
             var result = res.data;
-            if (result.status === 200){
+            if (result.status === 200) {
                 self.postList = result.data;
             }
         })

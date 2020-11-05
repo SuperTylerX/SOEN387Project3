@@ -16,7 +16,6 @@ public class Attachment {
 
 
 
-
     // Used for first created
     public Attachment(String attachName) {
         this.attachName = attachName;
