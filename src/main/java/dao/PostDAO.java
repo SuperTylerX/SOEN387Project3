@@ -32,6 +32,7 @@ public class PostDAO {
         Connection connection = DBConnection.getConnection();
 
         try {
+            int j = 1;
             String query_get_post_id = "select post_attach_id from posts where post_id= ? ";
             PreparedStatement ps = connection.prepareStatement(query_get_post_id, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, postID);
@@ -46,10 +47,12 @@ public class PostDAO {
             ps1.setInt(1, postID);
             int i = ps1.executeUpdate();
             //delete attchment
-            String del_att = "delete from attachment where attach_id = ? ;";
-            PreparedStatement ps2 = connection.prepareStatement(del_att, Statement.RETURN_GENERATED_KEYS);
-            ps2.setInt(1, post_attach_id);
-            int j = ps2.executeUpdate();
+            if (post_attach_id != 0) {
+                String del_att = "delete from attachment where attach_id = ? ;";
+                PreparedStatement ps2 = connection.prepareStatement(del_att, Statement.RETURN_GENERATED_KEYS);
+                ps2.setInt(1, post_attach_id);
+                j = ps2.executeUpdate();
+            }
             return i == 1 && j == 1;
         } catch (Exception e) {
             e.printStackTrace();
