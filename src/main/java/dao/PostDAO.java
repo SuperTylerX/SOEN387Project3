@@ -33,7 +33,6 @@ public class PostDAO {
 
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-//                        System.out.println(generatedKeys.getInt(1));
                         post.setPostID(generatedKeys.getInt(1));
                     } else {
                         throw new SQLException("Creating post failed, no PostID obtained.");
@@ -45,18 +44,6 @@ public class PostDAO {
             int postID = post.getPostID();
             post.setPostID(postID);
 
-            // get attachment from DB
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM attachment WHERE attach_id=" + attachID);
-
-            if (rs.next()) {
-                Attachment att = new Attachment();
-                att.setAttachID(rs.getInt("attach_id"));
-                att.setAttachName(rs.getString("attach_name"));
-                att.setAttachSize(rs.getLong("attach_size"));
-                att.setAttachMIME(rs.getString("attach_mime"));
-                post.setAttachment(att);
-            }
             return postID;
 
         } catch (SQLException ex) {
@@ -89,7 +76,7 @@ public class PostDAO {
             PreparedStatement ps1 = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps1.setInt(1, postID);
             int i = ps1.executeUpdate();
-            //delete attchment
+            //delete attachment
             if (post_attach_id != 0) {
                 String del_att = "delete from attachment where attach_id = ? ;";
                 PreparedStatement ps2 = connection.prepareStatement(del_att, Statement.RETURN_GENERATED_KEYS);
