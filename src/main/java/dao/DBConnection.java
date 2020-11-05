@@ -1,10 +1,11 @@
 package dao;
 
+import config.AppConfig;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import static config.AppConfig.*;
 
 public class DBConnection {
 
@@ -12,8 +13,8 @@ public class DBConnection {
 
     public static Connection getConnection() {
         try {
-            Class.forName(JDBC_Driver);
-            conn = DriverManager.getConnection(DB_URL + DB_NAME + "?serverTimezone=UTC", DB_USER, DB_PASSWORD);
+            Class.forName(AppConfig.getInstance().JDBC_Driver);
+            conn = DriverManager.getConnection(AppConfig.getInstance().DB_URL + AppConfig.getInstance().DB_NAME + "?serverTimezone=UTC", AppConfig.getInstance().DB_USER, AppConfig.getInstance().DB_PASSWORD);
             return conn;
 
         } catch (SQLException e) {

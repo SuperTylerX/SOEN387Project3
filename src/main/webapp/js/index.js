@@ -133,7 +133,14 @@ new Vue({
         axios.get("post").then(function (res) {
             var result = res.data;
             if (result.status === 200) {
-                self.postList = result.data;
+                self.postList = result.data.map(function (el) {
+                    if (el.postCreatedDate === el.postModifiedDate) {
+                        el.postPublishedDate = new Date(el.postModifiedDate);
+                    } else {
+                        el.postPublishedDate = new Date(el.postModifiedDate) + "(Modified)";
+                    }
+                    return el;
+                });
             }
         })
     }

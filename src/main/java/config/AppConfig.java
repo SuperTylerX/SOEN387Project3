@@ -1,13 +1,48 @@
 package config;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class AppConfig {
 
-    public static final String ATTACH_DIR = "webapp/WEB-INFO/attachment";
-    public static final String PASSWORD_SALT = "r$/i7&f{$F!bfz|q-1JmvVxFzjV]$mufk/PC,(`+3mV.S[i>,;Zw+! ds#h0k{P}";
+    public String PASSWORD_SALT;
+    public String JDBC_Driver;
+    public String DB_URL;
+    public String DB_NAME;
+    public String DB_USER;
+    public String DB_PASSWORD;
 
-    public static final String JDBC_Driver = "com.mysql.cj.jdbc.Driver";
-    public static final String DB_URL = "jdbc:mysql://140.238.144.2:3306/";
-    public static final String DB_NAME = "soen387project2";
-    public static final String DB_USER = "soen387";
-    public static final String DB_PASSWORD = "soen387A+";
+    private static AppConfig config;
+
+    private AppConfig() {
+        this.init();
+    }
+
+    public static AppConfig getInstance() {
+        if (config == null) {
+            config = new AppConfig();
+        }
+        return config;
+    }
+
+    private void init() {
+
+        String path = AppConfig.class.getClassLoader().getResource("app.properties").getPath().replace("%20", " ");
+        try (InputStream input = new FileInputStream(path)) {
+            Properties prop = new Properties();
+            prop.load(input);
+            PASSWORD_SALT = prop.getProperty("PASSWORD_SALT");
+            JDBC_Driver = prop.getProperty("JDBC_Driver");
+            DB_URL = prop.getProperty("DB_URL");
+            DB_NAME = prop.getProperty("DB_NAME");
+            DB_USER = prop.getProperty("DB_USER");
+            DB_PASSWORD = prop.getProperty("DB_PASSWORD");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

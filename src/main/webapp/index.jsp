@@ -67,11 +67,11 @@
                     <div class="mdui-card-primary-title">{{item.postTitle}}</div>
                     <div class="mdui-card-primary-subtitle">
                         <span class="item"><i class="el-icon-user"></i>{{item.postAuthorName}}</span>
-                        <span class="item"><i class="el-icon-time"></i>{{item.postModifiedDate}}</span>
+                        <span class="item"><i class="el-icon-time"></i>{{item.postPublishedDate}}</span>
                     </div>
                 </div>
                 <div class="content">{{item.postContent}}</div>
-                <div class="mdui-chip attach-file">
+                <div class="mdui-chip attach-file" v-if="item.attachment">
                     <span class="mdui-chip-icon"><i class="mdui-icon material-icons">attach_file</i></span>
                     <span class="mdui-chip-title">{{item.attachment.attachName}}</span>
                 </div>

@@ -1,19 +1,11 @@
 package model;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static config.AppConfig.ATTACH_DIR;
-
 public class Attachment {
 
     private int attachID;
     private String attachName;
     private long attachSize;
     private String attachMIME;
-
 
 
     // Used for first created
@@ -44,7 +36,6 @@ public class Attachment {
     public void setAttachID(int attachID) {
         this.attachID = attachID;
     }
-
 
 
     public String getAttachName() {
