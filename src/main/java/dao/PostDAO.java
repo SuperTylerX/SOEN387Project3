@@ -1,5 +1,6 @@
 package dao;
 
+import config.AppConfig;
 import model.Attachment;
 import model.Post;
 import model.UserManager;
@@ -29,16 +30,35 @@ public class PostDAO {
 
     public boolean deletePost(int postID) {
         Connection connection = DBConnection.getConnection();
+
         try {
-            String query = "delete from posts where post_id = ? ;";
-            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            int j = 1;
+            String query_get_post_id = "select post_attach_id from posts where post_id= ? ";
+            PreparedStatement ps = connection.prepareStatement(query_get_post_id, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, postID);
-            int i = ps.executeUpdate();
-            return i == 1;
+            ResultSet rs = ps.executeQuery();
+            int post_attach_id = -1;
+            while (rs.next()) {
+                post_attach_id = rs.getInt("post_attach_id");
+            }
+            //delete post
+            String query = "delete from posts where post_id = ? ;";
+            PreparedStatement ps1 = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps1.setInt(1, postID);
+            int i = ps1.executeUpdate();
+            //delete attchment
+            if (post_attach_id != 0) {
+                String del_att = "delete from attachment where attach_id = ? ;";
+                PreparedStatement ps2 = connection.prepareStatement(del_att, Statement.RETURN_GENERATED_KEYS);
+                ps2.setInt(1, post_attach_id);
+                j = ps2.executeUpdate();
+            }
+            return i == 1 && j == 1;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+
     }
 
     public boolean checkValidOwner(long userId, int postID) {
@@ -49,8 +69,8 @@ public class PostDAO {
             ps.setInt(1, postID);
             ps.setLong(2, userId);
             ResultSet rs = ps.executeQuery();
-            int cnt=0;
-            while (rs.next()){
+            int cnt = 0;
+            while (rs.next()) {
                 cnt++;
             }
             return cnt == 1;
@@ -73,9 +93,13 @@ public class PostDAO {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
         try {
-
+            int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from posts,attachment where post_attach_id=attach_id order by post_modified_date desc limit 10");
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id order by post_modified_date desc limit ?;";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, postNum);
+            ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
                 Post p = new Post();
                 p.setPostID(rs.getInt("post_id"));
@@ -88,11 +112,16 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
-                Attachment att = new Attachment();
-                att.setAttachID(rs.getInt("attach_id"));
-                att.setAttachName(rs.getString("attach_name"));
-                p.setAttachment(att);
+
+                if (rs.getInt("attach_id") != 0) {
+                    Attachment att = new Attachment();
+                    att.setAttachID(rs.getInt("attach_id"));
+                    att.setAttachName(rs.getString("attach_name"));
+                    p.setAttachment(att);
+                }
+
                 posts.add(p);
+
             }
             return posts;
         } catch (SQLException e) {
