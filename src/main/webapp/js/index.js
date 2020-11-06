@@ -184,8 +184,8 @@ new Vue({
                 searchObj.tags = this.searchContent.tags;
             }
             if (this.searchContent.startDate) {
-                searchObj.startDate = new Date(this.searchContent.startDate).getTime();
-                searchObj.endDate = new Date(this.searchContent.endDate).getTime();
+                searchObj.startDate = new Date(this.searchContent.startDate + " 00:00:00").getTime();
+                searchObj.endDate = new Date(this.searchContent.endDate + " 00:00:00").getTime();
             }
             axios({
                 url: "search",

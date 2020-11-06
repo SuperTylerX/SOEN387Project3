@@ -19,6 +19,17 @@ public class Post {
 
     public Post() {
     }
+    //for test
+    public Post(int postID, long postAuthorID, String postAuthorName, String postTitle, String postContent, long postCreatedDate, long postModifiedDate, Attachment attachment) {
+        this.postID = postID;
+        this.postAuthorID = postAuthorID;
+        this.postAuthorName = postAuthorName;
+        this.postTitle = postTitle;
+        this.postContent = postContent;
+        this.postCreatedDate = postCreatedDate;
+        this.postModifiedDate = postModifiedDate;
+        this.attachment = attachment;
+    }
 
     //    This constructor used for first creating a post
     public Post(String postTitle, String postContent, long postAuthorID) {

@@ -20,6 +20,10 @@
         <servlet-name>postController</servlet-name>
         <servlet-class>controller.PostController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>searchController</servlet-name>
+        <servlet-class>controller.SearchController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>authController</servlet-name>
         <url-pattern>/auth</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>postController</servlet-name>
         <url-pattern>/post</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>searchController</servlet-name>
+        <url-pattern>/search</url-pattern>
     </servlet-mapping>
 
 
