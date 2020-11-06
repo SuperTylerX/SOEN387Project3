@@ -71,4 +71,13 @@ public class UserManager {
 
         return null;
     }
+
+    public long getUserIdByName(String userName) {
+        for (int i = 0; i < userList.size(); i++) {
+            if (userName.equals(userList.get(i).getUserName()) ) {
+                return userList.get(i).getUserId();
+            }
+        }
+        return -1;
+    }
 }
