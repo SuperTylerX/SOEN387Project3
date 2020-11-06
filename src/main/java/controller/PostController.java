@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -115,14 +116,17 @@ public class PostController extends HttpServlet {
         HashMap<String, String> postInfoMap = new HashMap<>();
         for (String pair : pairs) {
             String[] fields = pair.split("=");
-            postInfoMap.put(fields[0], fields[1]);
+            postInfoMap.put(fields[0], URLDecoder.decode(fields[1], "UTF-8"));
         }
 
         // retrieve post INFO
         int postId = Integer.parseInt(postInfoMap.get("postId"));
         String postTitle = postInfoMap.get("postTitle");
         String postContent = postInfoMap.get("postContent");
-        int attachId = Integer.parseInt(postInfoMap.get("attachId"));
+        int attachId = 0;
+        if (postInfoMap.get("attachId") != null) {
+            attachId = Integer.parseInt(postInfoMap.get("attachId"));
+        }
 
         // create updated post object
         Post post = new Post(postTitle, postContent, userId);
