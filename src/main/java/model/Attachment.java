@@ -6,27 +6,9 @@ public class Attachment {
     private String attachName;
     private long attachSize;
     private String attachMIME;
-
-
-    // Used for first created
-    public Attachment(String attachName) {
-        this.attachName = attachName;
-        this.initAttach();
-    }
-
-    public Attachment(int attachID, String attachName, int attachSize, String attachMIME) {
-        this.attachID = attachID;
-
-        this.attachName = attachName;
-        this.attachSize = attachSize;
-        this.attachMIME = attachMIME;
-    }
+    private byte[] fileContent;
 
     public Attachment() {
-    }
-
-    private void initAttach() {
-
     }
 
     public int getAttachID() {
@@ -36,7 +18,6 @@ public class Attachment {
     public void setAttachID(int attachID) {
         this.attachID = attachID;
     }
-
 
     public String getAttachName() {
         return attachName;
@@ -62,5 +43,11 @@ public class Attachment {
         this.attachMIME = attachMIME;
     }
 
+    public byte[] getFileContent() {
+        return fileContent;
+    }
 
+    public void setFileContent(byte[] fileContent) {
+        this.fileContent = fileContent;
+    }
 }
