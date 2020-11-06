@@ -14,6 +14,16 @@ new Vue({
                 content: "",
                 fileList: []
             },
+            searchContent: {
+                authorName: "",
+                tags: "",
+                startDate: "",
+                endDate: ""
+            },
+            userInfo: {
+                userName: "",
+                userId: ""
+            }
             // userUpdate: {
             //     email: "",
             //     password: "",
@@ -131,7 +141,7 @@ new Vue({
                             el.postTitle = dataJson.postTitle
                             el.postContent = dataJson.postContent
                             el.postPublishedDate = new Date().toString() + " (Modified)"
-                            if (dataJson.attachId){
+                            if (dataJson.attachId) {
                                 el.attachment.attachID = dataJson.attachId;
                                 el.attachment.attachName = self.updatedPost.fileList.name;
                             }
@@ -162,6 +172,43 @@ new Vue({
                         })
                     }
                 })
+            })
+        },
+        searchPost: function () {
+            var self = this;
+            var searchObj = {}
+            if (this.searchContent.authorName) {
+                searchObj.authorName = this.searchContent.authorName;
+            }
+            if (this.searchContent.tags) {
+                searchObj.tags = this.searchContent.tags;
+            }
+            if (this.searchContent.startDate) {
+                searchObj.startDate = new Date(this.searchContent.startDate).getTime();
+                searchObj.endDate = new Date(this.searchContent.endDate).getTime();
+            }
+            axios({
+                url: "search",
+                method: "get",
+                params: searchObj
+            }).then(function (res) {
+                var result = res.data;
+                if (result.status === 200) {
+                    self.postList = result.data.map(function (el) {
+                        if (el.postCreatedDate === el.postModifiedDate) {
+                            el.postPublishedDate = new Date(el.postModifiedDate);
+                        } else {
+                            el.postPublishedDate = new Date(el.postModifiedDate) + " (Modified)";
+                        }
+                        return el;
+                    });
+                }
+                self.searchContent = {
+                    authorName: "",
+                    tags: "",
+                    startDate: "",
+                    endDate: ""
+                }
             })
         },
         handleRemove(file, fileList) {

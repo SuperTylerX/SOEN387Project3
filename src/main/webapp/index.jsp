@@ -41,9 +41,10 @@
                 </span>
             <a href="../" class="mdui-typo-headline mdui-hidden-xs">Concordia Forum</a>
             <div class="mdui-toolbar-spacer"></div>
-            <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
-                    <i class="mdui-icon material-icons">search</i>
-                </span>
+            <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"
+                    mdui-dialog="{target: '#search-post-dialog'}">
+                <i class="mdui-icon material-icons">search</i>
+            </button>
             <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"
                     mdui-menu="{target: '#user-dropdown-menu',position : 'bottom'}">
                 <i class="mdui-icon material-icons">person</i>
@@ -62,7 +63,7 @@
     <section class="container">
         <div class="post-list">
             <div class="mdui-shadow-2 post-item" v-for="item in postList">
-                <div class="mdui-card-menu">
+                <div class="mdui-card-menu" v-if="userInfo.userId == item.postAuthorID">
                     <button class="mdui-btn mdui-btn-icon mdui-text-color-black" :id="'post-'+ item.postID +'-btn'"
                             @click="moreOptions(item.postID)">
                         <i class="mdui-icon material-icons">more_vert</i>
@@ -142,6 +143,38 @@
                     mdui-dialog-confirm :disabled="!this.updatedPost.title || !this.updatedPost.content"
                     @click="submitUpdatedPost">
                 Submit
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Search Post -->
+    <div class="mdui-dialog post-area" id="search-post-dialog">
+        <div class="mdui-dialog-title">Search</div>
+        <div class="mdui-dialog-content">
+
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">Author Name</label>
+                <input type="text" class="mdui-textfield-input" v-model="searchContent.authorName"/>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">Tags</label>
+                <input type="text" class="mdui-textfield-input" v-model="searchContent.tags"/>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">Start Date</label>
+                <input type="date" class="mdui-textfield-input" v-model="searchContent.startDate"/>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <label class="mdui-textfield-label">End Date</label>
+                <input type="date" class="mdui-textfield-input" v-model="searchContent.endDate"/>
+            </div>
+            <button type="button" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-red submit-btn"
+                    mdui-dialog-confirm @click="searchPost"
+                    :disabled="!((searchContent.endDate && searchContent.startDate)
+                || (!this.searchContent.endDate && !this.searchContent.startDate))"
+            >
+                Search
             </button>
         </div>
     </div>
