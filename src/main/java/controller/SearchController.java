@@ -22,17 +22,17 @@ public class SearchController extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String author = request.getParameter("author");
+        String author = request.getParameter("authorName");
         long userID = -1;
         if (author != null) {
             userID = UserManager.getInstance().getUserIdByName(author);
         }
         String startDate = request.getParameter("startDate");
-        String endDate = request.getParameter("author");
+        String endDate = request.getParameter("endDate");
         String tags = request.getParameter("tags");
         String[] tagArr = {};
-        if (tags != null) ;
-        {
+        System.out.println("tags:" + tags);
+        if (tags != null) {
             tagArr = tags.split(",");
         }
         PostDAO postdao = new PostDAO();
@@ -53,6 +53,7 @@ public class SearchController extends HttpServlet {
                 temp = postdao.readPostsByContent(s);
                 posts.addAll(temp);
             }
+            removeDuplicated(posts);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
         } else if (userID != -1 && startDate != null && endDate != null && tagArr.length == 0) {
@@ -62,34 +63,34 @@ public class SearchController extends HttpServlet {
         } else if (userID == -1 && startDate != null && endDate != null && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
-                temp = postdao.readPostsByContentAndDate(s,Long.parseLong(startDate), Long.parseLong(endDate));
+                temp = postdao.readPostsByContentAndDate(s, Long.parseLong(startDate), Long.parseLong(endDate));
                 posts.addAll(temp);
             }
+            removeDuplicated(posts);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        }else if (userID != -1 && (startDate == null || endDate == null) && tagArr.length != 0){
+        } else if (userID != -1 && (startDate == null || endDate == null) && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
-                temp = postdao.readPostsByAutherIdAndTag(userID,s);
+                temp = postdao.readPostsByAutherIdAndTag(userID, s);
                 posts.addAll(temp);
             }
+            removeDuplicated(posts);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        }else if(userID != -1 && startDate != null && endDate != null && tagArr.length != 0){
+        } else if (userID != -1 && startDate != null && endDate != null && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
-                temp = postdao.readPostsByAll(userID,Long.parseLong(startDate), Long.parseLong(endDate),s);
+                temp = postdao.readPostsByAll(userID, Long.parseLong(startDate), Long.parseLong(endDate), s);
                 posts.addAll(temp);
             }
+            removeDuplicated(posts);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        }else{
+        } else {
             // no limit return all posts
-//            posts=postdao.readPosts();
-//            String resultJson = arrToSuccessJson(posts);
-//            sendInfo(response, resultJson);
-            //for test only
-            String resultJson=wrongJson();
+            posts = postdao.readPosts();
+            String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
         }
 
@@ -104,7 +105,7 @@ public class SearchController extends HttpServlet {
         return resultJson;
     }
 
-    private String wrongJson(){
+    private String wrongJson() {
         HashMap<String, Integer> res = new HashMap<>();
         res.put("status", 403);
         Gson gson = new Gson();
@@ -118,5 +119,16 @@ public class SearchController extends HttpServlet {
         response.getWriter().write(json);
     }
 
+    private void removeDuplicated(ArrayList<Post> posts) {
+        for (int i = 0; i < posts.size(); i++) {
+            for (int j = i + 1; j < posts.size(); j++) {
+                if (posts.get(i).getPostID() == posts.get(j).getPostID()) {
+                    posts.remove(j);
+                    j--;
+                }
+            }
+        }
+
+    }
 
 }

@@ -16,9 +16,9 @@ public class PostDAO {
 
         try {
             String query;
-            if (attachID == 0){
-                 query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date) VALUES(?, ?, ?, ?, ?)";
-            }else{
+            if (attachID == 0) {
+                query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date) VALUES(?, ?, ?, ?, ?)";
+            } else {
                 query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date,post_attach_id) VALUES(?, ?, ?, ?, ?, ?)";
             }
 
@@ -29,7 +29,7 @@ public class PostDAO {
             ps.setInt(3, (int) post.getPostAuthorID());
             ps.setLong(4, post.getPostCreatedDate());
             ps.setLong(5, post.getPostModifiedDate());
-            if (attachID != 0){
+            if (attachID != 0) {
                 ps.setInt(6, attachID);
             }
 
@@ -92,6 +92,7 @@ public class PostDAO {
             return false;
         }
     }
+
     public boolean checkValidOwner(long userId, int postID) {
         Connection connection = DBConnection.getConnection();
         try {
@@ -117,18 +118,18 @@ public class PostDAO {
 
         try {
             PreparedStatement ps;
-            if (attachId == 0){
+            if (attachId == 0) {
                 ps = connection.prepareStatement("UPDATE posts SET post_title=?,post_content=?,post_modified_date=?,post_attach_id= NULL WHERE post_id=?");
-            }else{
+            } else {
                 ps = connection.prepareStatement("UPDATE posts SET post_title=?,post_content=?,post_modified_date=?,post_attach_id=? WHERE post_id=?");
             }
 
             ps.setString(1, post.getPostTitle());
             ps.setString(2, post.getPostContent());
             ps.setLong(3, post.getPostModifiedDate());
-            if (attachId == 0){
+            if (attachId == 0) {
                 ps.setInt(4, postId);
-            }else{
+            } else {
                 ps.setInt(4, attachId);
                 ps.setInt(5, postId);
             }
@@ -248,7 +249,7 @@ public class PostDAO {
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where post_created_date between ? And ? order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where post_modified_date between ? And ? order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, startDate);
             ps.setLong(2, endDate);
@@ -297,10 +298,10 @@ public class PostDAO {
         try {
 
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where post_content LIKE '%'?'%' or post_title LIKE '%'?'%' order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where post_content LIKE ? or post_title LIKE ? order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, tag);
-            ps.setString(2, tag);
+            ps.setString(1, "%" + tag + "%");
+            ps.setString(2, "%" + tag + "%");
             ps.setInt(3, postNum);
             ResultSet rs = ps.executeQuery();
 
@@ -338,13 +339,13 @@ public class PostDAO {
         }
     }
 
-    public ArrayList<Post> readPostsByAutherIdAndDate(long post_author_id,long startDate, long endDate) {
+    public ArrayList<Post> readPostsByAutherIdAndDate(long post_author_id, long startDate, long endDate) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where post_author_id=? and post_created_date between ? And ? order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where post_author_id=? and post_modified_date between ? And ? order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, post_author_id);
             ps.setLong(2, startDate);
@@ -387,17 +388,17 @@ public class PostDAO {
 
     }
 
-    public ArrayList<Post> readPostsByContentAndDate(String tag,long startDate, long endDate) {
+    public ArrayList<Post> readPostsByContentAndDate(String tag, long startDate, long endDate) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
         int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
         try {
 
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (post_content LIKE '%'?'%' or post_title LIKE '%'?'%' and post_created_date between ? And ?) order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (post_content LIKE ? or post_title LIKE ? and post_modified_date between ? And ?) order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, tag);
-            ps.setString(2, tag);
+            ps.setString(1, "%" + tag + "%");
+            ps.setString(2, "%" + tag + "%");
             ps.setLong(3, startDate);
             ps.setLong(4, endDate);
             ps.setInt(5, postNum);
@@ -437,17 +438,17 @@ public class PostDAO {
         }
     }
 
-    public ArrayList<Post> readPostsByAutherIdAndTag(long post_author_id,String tag) {
+    public ArrayList<Post> readPostsByAutherIdAndTag(long post_author_id, String tag) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (post_author_id=? and post_content LIKE '%'?'%' or post_title LIKE '%'?'%') order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (post_author_id=? and post_content LIKE ? or post_title LIKE ?) order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, post_author_id);
-            ps.setString(2, tag);
-            ps.setString(3, tag);
+            ps.setString(2, "%" + tag + "%");
+            ps.setString(3, "%" + tag + "%");
             ps.setInt(4, postNum);
             ResultSet rs = ps.executeQuery();
 
@@ -486,17 +487,17 @@ public class PostDAO {
 
     }
 
-    public ArrayList<Post> readPostsByAll(long post_author_id,long startDate, long endDate,String tag) {
+    public ArrayList<Post> readPostsByAll(long post_author_id, long startDate, long endDate, String tag) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (post_author_id=? and (post_content LIKE '%'?'%' or post_title LIKE '%'?'%') and post_created_date between ? And ?) order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (post_author_id=? and (post_content LIKE ? or post_title LIKE ?) and post_modified_date between ? And ?) order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, post_author_id);
-            ps.setString(2, tag);
-            ps.setString(3, tag);
+            ps.setString(2, "%" + tag + "%");
+            ps.setString(3, "%" + tag + "%");
             ps.setLong(4, startDate);
             ps.setLong(5, endDate);
             ps.setInt(6, postNum);
