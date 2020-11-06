@@ -107,7 +107,7 @@
                 <textarea class="mdui-textfield-input" rows="5" v-model="newPost.content"></textarea>
             </div>
 
-            <el-upload action="https://httpbin.org/post" :file-list="newPost.fileList" :limit="1"
+            <el-upload action="file" :file-list="newPost.fileList" :limit="1"
                        :on-remove="handleRemove">
                 <el-button size="small">Click to upload</el-button>
             </el-upload>
