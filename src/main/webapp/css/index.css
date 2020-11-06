@@ -53,11 +53,11 @@ body {
     padding-right: 3px;
 }
 
-#create_post-dialog {
+#create-post-dialog, #update-post-dialog {
     height: 450px;
 }
 
-#create_post-dialog .submit-btn {
+#create-post-dialog .submit-btn, #update-post-dialog .submit-btn {
     margin-top: 13px;
     float: right;
     overflow: hidden;

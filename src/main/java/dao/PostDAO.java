@@ -10,13 +10,18 @@ import java.util.ArrayList;
 
 public class PostDAO {
 
-    //    TODO: probably we need a service layer to handle the logic process, not in DAO...
     public int createPost(Post post, int attachID) {
 
         Connection connection = DBConnection.getConnection();
 
         try {
-            String query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date,post_attach_id) VALUES(?, ?, ?, ?, ?, ?)";
+            String query;
+            if (attachID == 0){
+                 query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date) VALUES(?, ?, ?, ?, ?)";
+            }else{
+                query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date,post_attach_id) VALUES(?, ?, ?, ?, ?, ?)";
+            }
+
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, post.getPostTitle());
@@ -24,7 +29,9 @@ public class PostDAO {
             ps.setInt(3, (int) post.getPostAuthorID());
             ps.setLong(4, post.getPostCreatedDate());
             ps.setLong(5, post.getPostModifiedDate());
-            ps.setInt(6, attachID);
+            if (attachID != 0){
+                ps.setInt(6, attachID);
+            }
 
             int i = ps.executeUpdate();
 
@@ -40,11 +47,7 @@ public class PostDAO {
                 }
             }
 
-            // set the postID
-            int postID = post.getPostID();
-            post.setPostID(postID);
-
-            return postID;
+            return post.getPostID();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -115,13 +118,22 @@ public class PostDAO {
         Connection connection = DBConnection.getConnection();
 
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE posts SET post_title=?,post_content=?,post_modified_date=?,post_attach_id=? WHERE post_id=?");
+            PreparedStatement ps;
+            if (attachId == 0){
+                ps = connection.prepareStatement("UPDATE posts SET post_title=?,post_content=?,post_modified_date=?,post_attach_id= NULL WHERE post_id=?");
+            }else{
+                ps = connection.prepareStatement("UPDATE posts SET post_title=?,post_content=?,post_modified_date=?,post_attach_id=? WHERE post_id=?");
+            }
 
             ps.setString(1, post.getPostTitle());
             ps.setString(2, post.getPostContent());
             ps.setLong(3, post.getPostModifiedDate());
-            ps.setInt(4, attachId);
-            ps.setInt(5, postId);
+            if (attachId == 0){
+                ps.setInt(4, postId);
+            }else{
+                ps.setInt(4, attachId);
+                ps.setInt(5, postId);
+            }
 
             int i = ps.executeUpdate();
 
