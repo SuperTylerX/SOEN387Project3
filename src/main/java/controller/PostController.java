@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dao.PostDAO;
 import model.Post;
-import model.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,34 +30,21 @@ public class PostController extends HttpServlet {
             return;
         }
 
-//        System.out.println(request);
-//        String body=getBodyString(request);
-//        System.out.println(body);
-
         // get parameter
         long userId = (long) request.getSession().getAttribute("userId");
+//        System.out.println(userId);
         String postTitle = request.getParameter("postTitle");
         String postContent = request.getParameter("postContent");
-        String userName = UserManager.getInstance().getUserNameById(userId);
-        int attachId = Integer.parseInt(request.getParameter("attachId"));
-//        test
-//        System.out.println(userId);
-//        System.out.println(postTitle);
-//        System.out.println(postContent);
-//        long userId = 3;
-//        postContent = "haha";
-//        postTitle = "test";
-//        System.out.println(userName);
-//        int attachId = 3;
-//        System.out.println(attachId);
+        int attachId = 0;
+        if (request.getParameter("attachId") != null) {
+            attachId = Integer.parseInt(request.getParameter("attachId"));
+        }
 
         // create post object
         Post post = new Post(postTitle, postContent, userId);
-        post.setPostAuthorName(userName);
         PostDAO postdao = new PostDAO();
         int postID = postdao.createPost(post, attachId);
 
-//        System.out.println(postID);
         // return status in form of json
         HashMap<String, Object> res = new HashMap<>();
         if (postID != -1) {
@@ -69,7 +56,6 @@ public class PostController extends HttpServlet {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String resultJson = gson.toJson(res);
         sendInfo(response, resultJson);
-//        System.out.println(res);
     }
 
     // Get a list of post
@@ -123,32 +109,33 @@ public class PostController extends HttpServlet {
         }
         long userId = (long) request.getSession().getAttribute("userId");
 
+        // retrieve request
         String body = getBodyString(request);
         System.out.println(body);
-        String[] arr = body.split("=");
+        String[] pairs = body.split("&");
+        HashMap<String, String> postInfoMap = new HashMap<>();
+        for (String pair : pairs) {
+            String[] fields = pair.split("=");
+            postInfoMap.put(fields[0], URLDecoder.decode(fields[1], "UTF-8"));
+        }
 
-        int postId = Integer.parseInt(arr[1].trim());
-        String postTitle = arr[3].trim();  // to be checked
-        String postContent = arr[5].trim();
-        int attachId = Integer.parseInt(arr[7].trim());
-//        //test
-//         long userId =3;
-//         int postId = 61;
-//        String postTitle = "updateTest";
-//        String postContent = "ymca";
-//        int attachId = 8;
+        // retrieve post INFO
+        int postId = Integer.parseInt(postInfoMap.get("postId"));
+        String postTitle = postInfoMap.get("postTitle");
+        String postContent = postInfoMap.get("postContent");
+        int attachId = 0;
+        if (postInfoMap.get("attachId") != null) {
+            attachId = Integer.parseInt(postInfoMap.get("attachId"));
+        }
 
         // create updated post object
         Post post = new Post(postTitle, postContent, userId);
         post.setPostModifiedDate(new Date().getTime());
         PostDAO postdao = new PostDAO();
 
-        System.out.println("ho");
-
         HashMap<String, Integer> resulthm = new HashMap<>();
         if (postdao.updatePost(post, postId, attachId)) {
             resulthm.put("status", 200);
-            System.out.println("ghhh");
         } else {
             resulthm.put("status", 403);
         }
