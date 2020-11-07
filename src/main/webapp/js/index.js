@@ -1,3 +1,24 @@
+Date.prototype.format = function (format) {
+    var date = {
+        "M+": this.getMonth() + 1,
+        "d+": this.getDate().toString(),
+        "h+": this.getHours().toString().padStart(2, '0'),
+        "m+": this.getMinutes().toString().padStart(2, '0'),
+        "s+": this.getSeconds().toString().padStart(2, '0'),
+        "q+": Math.floor((this.getMonth() + 3) / 3),
+        "S+": this.getMilliseconds().toString()
+    };
+    if (/(y+)/i.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+    }
+    for (var k in date) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length === 1 ?
+                date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+        }
+    }
+    return format;
+}
 new Vue({
     el: '#vue',
     data: function () {
@@ -145,7 +166,7 @@ new Vue({
                         if (el.postID === postId) {
                             el.postTitle = dataJson.postTitle;
                             el.postContent = dataJson.postContent;
-                            el.postPublishedDate = new Date().toString() + " (Modified)";
+                            el.postPublishedDate = new Date().format('yyyy-MM-dd h:m:s')+ " (Modified)";
                             if (dataJson.attachId) {
                                 if (!el.attachment) {
                                     el.attachment = {};
@@ -204,9 +225,9 @@ new Vue({
                 if (result.status === 200) {
                     self.postList = result.data.map(function (el) {
                         if (el.postCreatedDate === el.postModifiedDate) {
-                            el.postPublishedDate = new Date(el.postModifiedDate);
+                            el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s');
                         } else {
-                            el.postPublishedDate = new Date(el.postModifiedDate) + " (Modified)";
+                            el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s') + " (Modified)";
                         }
                         return el;
                     });
@@ -271,9 +292,9 @@ new Vue({
             if (result.status === 200) {
                 self.postList = result.data.map(function (el) {
                     if (el.postCreatedDate === el.postModifiedDate) {
-                        el.postPublishedDate = new Date(el.postModifiedDate);
+                        el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s');
                     } else {
-                        el.postPublishedDate = new Date(el.postModifiedDate) + " (Modified)";
+                        el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s') + " (Modified)";
                     }
                     return el;
                 });
