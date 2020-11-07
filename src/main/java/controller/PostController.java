@@ -32,7 +32,6 @@ public class PostController extends HttpServlet {
 
         // get parameter
         long userId = (long) request.getSession().getAttribute("userId");
-//        System.out.println(userId);
         String postTitle = request.getParameter("postTitle");
         String postContent = request.getParameter("postContent");
         int attachId = 0;
