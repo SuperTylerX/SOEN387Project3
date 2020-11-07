@@ -45,6 +45,10 @@ body {
     margin-top: 20px;
 }
 
+.container .post-list .post-item a .attach-file {
+    color: rgba(0, 0, 0, 0.87);
+}
+
 .container .post-list .post-item .mdui-card-primary-subtitle .item:nth-child(2) {
     padding-left: 10px;
 }
@@ -76,3 +80,4 @@ body {
     bottom: 20px;
     right: 20px;
 }
+

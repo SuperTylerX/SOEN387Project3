@@ -43,6 +43,18 @@ new Vue({
         moreOptions: function (postId) {
             new mdui.Menu("#post-" + postId + "-btn", "#post-" + postId + "-menu", {align: 'right'});
         },
+        submitFileCallback: function (response, file, fileList) {
+            if (response.status === 200) {
+                fileList[0].attachId = response.data.attachID;
+                this.newPost.fileList = fileList;
+            }
+        },
+        submitFileCallback2: function (response, file, fileList) {
+            if (response.status === 200) {
+                fileList[0].attachId = response.data.attachID;
+                this.updatedPost.fileList = fileList;
+            }
+        },
         submitPost: function () {
             var self = this;
             var data = {
@@ -63,8 +75,6 @@ new Vue({
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function (data) {
-                console.log(data)
-                console.log(self.newPost.fileList)
                 if (data.data.status === 200) {
                     var newPost = {
                         "postID": data.data.data.postID,
@@ -74,13 +84,12 @@ new Vue({
                         "postContent": self.newPost.content
                     }
 
-                    if (self.newPost.fileList[0]) {
+                    if (self.newPost.fileList.length === 1) {
                         newPost.attachment = {
                             "attachID": self.newPost.fileList[0].attachId,
-                            "attachName": self.newPost.fileList[0].attachName
+                            "attachName": self.newPost.fileList[0].name
                         }
                     }
-                    console.log(newPost)
                     self.postList = [newPost].concat(self.postList)
                     self.newPost = {
                         title: "",
@@ -88,7 +97,6 @@ new Vue({
                         fileList: []
                     }
                 }
-
             })
         },
         updatePost: function (postId) {
@@ -102,13 +110,10 @@ new Vue({
                         content: el.postContent
                     }
                     if (el.attachment) {
-                        self.updatedPost = {
-                            ...self.updatePost,
-                            fileList: {
-                                name: el.attachment.attachName,
-                                attachId: el.attachment.attachID
-                            }
-                        }
+                        self.updatedPost.fileList = [{
+                            name: el.attachment.attachName,
+                            attachId: el.attachment.attachID
+                        }]
                     }
                 }
             })
@@ -121,8 +126,8 @@ new Vue({
                 postTitle: self.updatedPost.title,
                 postContent: self.updatedPost.content
             }
-            if (self.newPost.fileList.length !== 0) {
-                dataJson.attachId = self.newPost.fileList[0].attachId
+            if (self.updatedPost.fileList.length !== 0) {
+                dataJson.attachId = self.updatedPost.fileList[0].attachId;
             }
             axios({
                 url: 'post',
@@ -138,12 +143,15 @@ new Vue({
                 if (data.data.status === 200) {
                     self.postList.forEach(function (el) {
                         if (el.postID === postId) {
-                            el.postTitle = dataJson.postTitle
-                            el.postContent = dataJson.postContent
-                            el.postPublishedDate = new Date().toString() + " (Modified)"
+                            el.postTitle = dataJson.postTitle;
+                            el.postContent = dataJson.postContent;
+                            el.postPublishedDate = new Date().toString() + " (Modified)";
                             if (dataJson.attachId) {
+                                if (!el.attachment) {
+                                    el.attachment = {};
+                                }
                                 el.attachment.attachID = dataJson.attachId;
-                                el.attachment.attachName = self.updatedPost.fileList.name;
+                                el.attachment.attachName = self.updatedPost.fileList[0].name;
                             }
                         }
                     })
@@ -176,7 +184,7 @@ new Vue({
         },
         searchPost: function () {
             var self = this;
-            var searchObj = {}
+            var searchObj = {};
             if (this.searchContent.authorName) {
                 searchObj.authorName = this.searchContent.authorName;
             }
@@ -185,7 +193,7 @@ new Vue({
             }
             if (this.searchContent.startDate) {
                 searchObj.startDate = new Date(this.searchContent.startDate + " 00:00:00").getTime();
-                searchObj.endDate = new Date(this.searchContent.endDate + " 00:00:00").getTime();
+                searchObj.endDate = new Date(this.searchContent.endDate + " 00:00:00").getTime() + 1000 * 60 * 60 * 24;
             }
             axios({
                 url: "search",
@@ -211,7 +219,7 @@ new Vue({
                 }
             })
         },
-        handleRemove(file, fileList) {
+        removeAttach(file, fileList) {
             console.log(file, fileList);
         },
         json2Form: function (data) {

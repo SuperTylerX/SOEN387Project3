@@ -39,7 +39,7 @@
                 <span class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
                     <i class="mdui-icon material-icons">menu</i>
                 </span>
-            <a href="../" class="mdui-typo-headline mdui-hidden-xs">Concordia Forum</a>
+            <a href="./" class="mdui-typo-headline mdui-hidden-xs">Concordia Forum</a>
             <div class="mdui-toolbar-spacer"></div>
             <button class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white"
                     mdui-dialog="{target: '#search-post-dialog'}">
@@ -83,10 +83,13 @@
                     </div>
                 </div>
                 <div class="content">{{item.postContent}}</div>
-                <div class="mdui-chip attach-file" v-if="item.attachment">
-                    <span class="mdui-chip-icon"><i class="mdui-icon material-icons">attach_file</i></span>
-                    <span class="mdui-chip-title">{{item.attachment.attachName}}</span>
-                </div>
+                <a v-if="item.attachment"
+                   :href="'file?attachId=' + item.attachment.attachID + '&postId=' + item.postID">
+                    <div class="mdui-chip attach-file">
+                        <span class="mdui-chip-icon"><i class="mdui-icon material-icons">attach_file</i></span>
+                        <span class="mdui-chip-title">{{item.attachment.attachName}}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
@@ -108,7 +111,7 @@
             </div>
 
             <el-upload action="file" :file-list="newPost.fileList" :limit="1"
-                       :on-remove="handleRemove">
+                       :on-remove="removeAttach" :on-success="submitFileCallback">
                 <el-button size="small">Click to upload</el-button>
             </el-upload>
 
@@ -125,17 +128,17 @@
         <div class="mdui-dialog-title">Post Something...</div>
         <div class="mdui-dialog-content">
 
-            <div class="mdui-textfield mdui-textfield-floating-label">
+            <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Title</label>
                 <input type="text" class="mdui-textfield-input" v-model="updatedPost.title"></input>
             </div>
-            <div class="mdui-textfield mdui-textfield-floating-label">
+            <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Content</label>
                 <textarea class="mdui-textfield-input" rows="5" v-model="updatedPost.content"></textarea>
             </div>
 
-            <el-upload action="https://httpbin.org/post" :file-list="updatedPost.fileList" :limit="1"
-                       :on-remove="handleRemove">
+            <el-upload action="file" :file-list="updatedPost.fileList" :limit="1"
+                       :on-remove="removeAttach" :on-success="submitFileCallback2">
                 <el-button size="small">Click to upload</el-button>
             </el-upload>
 
@@ -153,19 +156,19 @@
         <div class="mdui-dialog-title">Search</div>
         <div class="mdui-dialog-content">
 
-            <div class="mdui-textfield mdui-textfield-floating-label">
+            <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Author Name</label>
                 <input type="text" class="mdui-textfield-input" v-model="searchContent.authorName"/>
             </div>
-            <div class="mdui-textfield mdui-textfield-floating-label">
+            <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Tags</label>
-                <input type="text" class="mdui-textfield-input" v-model="searchContent.tags"/>
+                <input type="text" class="mdui-textfield-input" v-model="searchContent.tags" placeholder="#tag1,#tag2..."/>
             </div>
-            <div class="mdui-textfield mdui-textfield-floating-label">
+            <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Start Date</label>
                 <input type="date" class="mdui-textfield-input" v-model="searchContent.startDate"/>
             </div>
-            <div class="mdui-textfield mdui-textfield-floating-label">
+            <div class="mdui-textfield">
                 <label class="mdui-textfield-label">End Date</label>
                 <input type="date" class="mdui-textfield-input" v-model="searchContent.endDate"/>
             </div>
