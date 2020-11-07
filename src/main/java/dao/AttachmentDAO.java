@@ -51,7 +51,27 @@ public class AttachmentDAO {
 
     }
 
-    public void deleteAttachmentID(int attachID) {
+    public boolean deleteAttachmentID(int attachID) {
+        Connection connection = DBConnection.getConnection();
+
+        try {
+            //delete attachment
+            if (attachID != 0) {
+                Statement stmt = connection.createStatement();
+                int i = stmt.executeUpdate("DELETE FROM attachment WHERE attach_id=" + attachID);
+                return i == 1;
+            }
+            return false;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -85,4 +105,22 @@ public class AttachmentDAO {
         }
     }
 
+    public boolean checkValidOwner(long userId, int postID) {
+        Connection connection = DBConnection.getConnection();
+        try {
+            String query = "select * from posts where post_id = ? AND post_author_id = ?;";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, postID);
+            ps.setLong(2, userId);
+            ResultSet rs = ps.executeQuery();
+            int cnt = 0;
+            while (rs.next()) {
+                cnt++;
+            }
+            return cnt == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
