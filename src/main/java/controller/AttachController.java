@@ -14,7 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name = "AttachController")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
@@ -129,6 +134,28 @@ public class AttachController extends HttpServlet {
         }
         long userId = (long) request.getSession().getAttribute("userId");
 
+        // retrieve request
+        String body = getBodyString(request);
+        String[] pairs = body.split("&");
+        HashMap<String, String> paraMap = new HashMap<>();
+        for (String pair : pairs) {
+            String[] fields = pair.split("=");
+            paraMap.put(fields[0], URLDecoder.decode(fields[1], "UTF-8"));
+        }
+        int postId = Integer.parseInt(paraMap.get("postId"));
+        int attachId = Integer.parseInt(paraMap.get("attachId"));
+
+
+        AttachmentDAO attachmentDAO = new AttachmentDAO();
+        HashMap<String, Integer> resulthm = new HashMap<>();
+        if (attachmentDAO.checkValidOwner(userId, postId) && attachmentDAO.deleteAttachmentID(attachId)) {
+            resulthm.put("status", 200);
+        } else {
+            resulthm.put("status", 403);
+        }
+        Gson gson = new Gson();
+        String res = gson.toJson(resulthm);
+        sendInfo(response, res);
 
     }
 
@@ -147,5 +174,43 @@ public class AttachController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(json);
+    }
+
+    protected String getBodyString(HttpServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader;
+        try {
+            reader = request.getReader();
+            try {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(specailCharFilter(line)).append('\n');
+                }
+                String body = sb.toString();
+                return body.trim();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                reader.close();
+            }
+        } catch (IOException e) {
+            return "";
+        }
+        return "";
+    }
+
+    private String specailCharFilter(String input) {
+        Pattern singleQuotePattern = Pattern.compile("[^\\\\]'");
+        Matcher m = singleQuotePattern.matcher(input);
+        List<String> singleQuoteList = new ArrayList<String>();
+        while (m.find()) {
+            singleQuoteList.add(m.group(0));
+        }
+        for (String temp : singleQuoteList) {
+            String newString = temp.substring(0, 1) + "\\\\" + temp.substring(1);
+            input = input.replace(temp, newString);
+        }
+
+        return input;
     }
 }
