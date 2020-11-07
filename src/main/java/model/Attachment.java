@@ -1,7 +1,10 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+
 public class Attachment {
 
+    @Expose
     private int attachID;
     private String attachName;
     private long attachSize;
