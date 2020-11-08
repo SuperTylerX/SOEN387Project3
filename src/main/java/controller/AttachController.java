@@ -89,7 +89,7 @@ public class AttachController extends HttpServlet {
         int postId = Integer.parseInt(request.getParameter("postId"));
 
         AttachmentDAO attachmentDAO = new AttachmentDAO();
-        Attachment attach = attachmentDAO.readAttachment(attachId, postId);
+        Attachment attach = attachmentDAO.getAttachment(attachId, postId);
 
         if (attach == null) {
             response.sendRedirect("404.html");
@@ -179,7 +179,7 @@ public class AttachController extends HttpServlet {
             try {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    sb.append(specailCharFilter(line)).append('\n');
+                    sb.append(specialCharFilter(line)).append('\n');
                 }
                 String body = sb.toString();
                 return body.trim();
@@ -194,7 +194,7 @@ public class AttachController extends HttpServlet {
         return "";
     }
 
-    private String specailCharFilter(String input) {
+    private String specialCharFilter(String input) {
         Pattern singleQuotePattern = Pattern.compile("[^\\\\]'");
         Matcher m = singleQuotePattern.matcher(input);
         List<String> singleQuoteList = new ArrayList<String>();
@@ -202,7 +202,7 @@ public class AttachController extends HttpServlet {
             singleQuoteList.add(m.group(0));
         }
         for (String temp : singleQuoteList) {
-            String newString = temp.substring(0, 1) + "\\\\" + temp.substring(1);
+            String newString = temp.charAt(0) + "\\\\" + temp.substring(1);
             input = input.replace(temp, newString);
         }
 

@@ -62,7 +62,7 @@ new Vue({
             })
         },
         moreOptions: function (postId) {
-            new mdui.Menu("#post-" + postId + "-btn", "#post-" + postId + "-menu", {align: 'right'});
+            new mdui.Menu("#post-" + postId + "-btn", "#post-" + postId + "-menu", {align: 'right'}).open();
         },
         submitFileCallback: function (response, file, fileList) {
             if (response.status === 200) {
