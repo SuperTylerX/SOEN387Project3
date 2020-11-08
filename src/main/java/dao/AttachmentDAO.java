@@ -71,7 +71,7 @@ public class AttachmentDAO {
 
     }
 
-    public Attachment readAttachment(int attachId, int postId) {
+    public Attachment getAttachment(int attachId, int postId) {
 
         Connection connection = DBConnection.getConnection();
         try {
@@ -91,7 +91,7 @@ public class AttachmentDAO {
                 attach.setAttachMIME(rs.getString("attach_mime"));
                 attach.setFileContent(rs.getBytes("attach_file"));
                 return attach;
-            }else{
+            } else {
                 return null;
             }
 
@@ -107,22 +107,4 @@ public class AttachmentDAO {
         }
     }
 
-    public boolean checkValidOwner(long userId, int postID) {
-        Connection connection = DBConnection.getConnection();
-        try {
-            String query = "select * from posts where post_id = ? AND post_author_id = ?;";
-            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, postID);
-            ps.setLong(2, userId);
-            ResultSet rs = ps.executeQuery();
-            int cnt = 0;
-            while (rs.next()) {
-                cnt++;
-            }
-            return cnt == 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
