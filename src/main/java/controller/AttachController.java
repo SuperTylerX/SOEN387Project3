@@ -33,7 +33,6 @@ public class AttachController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        long userId = (long) request.getSession().getAttribute("userId");
 
         if (ServletFileUpload.isMultipartContent(request)) {
 
@@ -82,45 +81,43 @@ public class AttachController extends HttpServlet {
         final int BUFFER_SIZE = 4096;
 
         // get request parameters
-        long userId = (long) request.getSession().getAttribute("userId");
-        int attachId = 0;
-        if (request.getParameter("attachId") != null) {
-            attachId = Integer.parseInt(request.getParameter("attachId"));
+        if (request.getParameter("attachId") == null || request.getParameter("postId") == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
         }
-//        int postId = 0;
-//        if (request.getParameter("postId") != null) {
-//            postId = Integer.parseInt(request.getParameter("postId"));
-//        }
+        int attachId = Integer.parseInt(request.getParameter("attachId"));
+        int postId = Integer.parseInt(request.getParameter("postId"));
 
         AttachmentDAO attachmentDAO = new AttachmentDAO();
-        Attachment attach = attachmentDAO.readAttachment(attachId);
+        Attachment attach = attachmentDAO.readAttachment(attachId, postId);
+
+        if (attach == null) {
+            response.sendRedirect("404.html");
+            return;
+        }
         try {
             InputStream inputStream = new ByteArrayInputStream(attach.getFileContent());
 
-            if (attach != null && inputStream != null) {
-                // set content properties and header attributes for the response
-                response.setHeader("pragma", "no-cache");
-                response.setHeader("cache-control", "no-cache");
-                response.setDateHeader("expires", 0);
-                response.setHeader("Content-Disposition", "attachment;filename=" + attach.getAttachName());
-                response.setContentType(attach.getAttachMIME());
-                response.setContentLength(inputStream.available());
-                // writes the file to the client
+            // set content properties and header attributes for the response
+            response.setHeader("pragma", "no-cache");
+            response.setHeader("cache-control", "no-cache");
+            response.setDateHeader("expires", 0);
+            response.setHeader("Content-Disposition", "attachment;filename=" + attach.getAttachName());
+            response.setContentType(attach.getAttachMIME());
+            response.setContentLength(inputStream.available());
+            // writes the file to the client
 
-                OutputStream outputStream = response.getOutputStream();
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int bytesRead = -1;
+            OutputStream outputStream = response.getOutputStream();
+            byte[] buffer = new byte[BUFFER_SIZE];
+            int bytesRead = -1;
 
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-
-                inputStream.close();
-                outputStream.close();
-
-            } else {
-                response.getWriter().print("File not found for the id: " + attachId);
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
             }
+
+            inputStream.close();
+            outputStream.close();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -132,7 +129,6 @@ public class AttachController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        long userId = (long) request.getSession().getAttribute("userId");
 
         // retrieve request
         String body = getBodyString(request);
@@ -142,13 +138,12 @@ public class AttachController extends HttpServlet {
             String[] fields = pair.split("=");
             paraMap.put(fields[0], URLDecoder.decode(fields[1], "UTF-8"));
         }
-        int postId = Integer.parseInt(paraMap.get("postId"));
-        int attachId = Integer.parseInt(paraMap.get("attachId"));
 
+        int attachId = Integer.parseInt(paraMap.get("attachId"));
 
         AttachmentDAO attachmentDAO = new AttachmentDAO();
         HashMap<String, Integer> resulthm = new HashMap<>();
-        if (attachmentDAO.checkValidOwner(userId, postId) && attachmentDAO.deleteAttachmentID(attachId)) {
+        if (attachmentDAO.deleteAttachment(attachId)) {
             resulthm.put("status", 200);
         } else {
             resulthm.put("status", 403);
