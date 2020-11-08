@@ -100,8 +100,9 @@ new Vue({
                     var newPost = {
                         "postID": data.data.data.postID,
                         "postTitle": self.newPost.title,
+                        "postAuthorID": self.userInfo.userId,
                         "postAuthorName": self.userInfo.userName,
-                        "postPublishedDate": new Date().toString(),
+                        "postPublishedDate": new Date().format('yyyy-MM-dd h:m:s'),
                         "postContent": self.newPost.content
                     }
 
@@ -166,7 +167,7 @@ new Vue({
                         if (el.postID === postId) {
                             el.postTitle = dataJson.postTitle;
                             el.postContent = dataJson.postContent;
-                            el.postPublishedDate = new Date().format('yyyy-MM-dd h:m:s')+ " (Modified)";
+                            el.postPublishedDate = new Date().format('yyyy-MM-dd h:m:s') + " (Modified)";
                             if (dataJson.attachId) {
                                 if (!el.attachment) {
                                     el.attachment = {};
@@ -241,7 +242,34 @@ new Vue({
             })
         },
         removeAttach(file, fileList) {
-            console.log(file, fileList);
+            var self = this;
+            var attachId = file.attachId;
+            axios({
+                url: "file",
+                method: "delete",
+                data: {
+                    attachId: attachId
+                },
+                transformRequest: [
+                    self.json2Form
+                ],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function (res) {
+                    self.newPost.fileList = [];
+                    self.updatedPost.fileList = [];
+                    self.postList.forEach(function (el){
+                        if (el.attachment && el.attachment.attachID === attachId){
+                            el.attachment = null;
+                        }
+                    })
+                    if (res.data.status !== 200) {
+                        alert("Fail!");
+                    }
+
+                }
+            )
         },
         json2Form: function (data) {
             let ret = ''

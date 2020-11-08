@@ -28,10 +28,10 @@ public class AttachmentDAO {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         attach.setAttachID(generatedKeys.getInt(1));
-                    } else {
-                        throw new SQLException("Creating attachment failed, no attachID obtained.");
                     }
                 }
+            } else {
+                return -1;
             }
             return attach.getAttachID();
 
@@ -47,11 +47,7 @@ public class AttachmentDAO {
         }
     }
 
-    public void updateAttachmentID(int attachID, int postID) {
-
-    }
-
-    public boolean deleteAttachmentID(int attachID) {
+    public boolean deleteAttachment(int attachID) {
         Connection connection = DBConnection.getConnection();
 
         try {
@@ -75,14 +71,17 @@ public class AttachmentDAO {
 
     }
 
-
-    public Attachment readAttachment(int attachId) {
+    public Attachment readAttachment(int attachId, int postId) {
 
         Connection connection = DBConnection.getConnection();
         try {
 
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM attachment WHERE attach_id=" + attachId);
+            String query = "select * from posts,attachment where post_attach_id=attach_id and post_id = ? and attach_id = ?;";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, postId);
+            ps.setInt(2, attachId);
+            ResultSet rs = ps.executeQuery();
 
             Attachment attach = new Attachment();
 
@@ -91,8 +90,11 @@ public class AttachmentDAO {
                 attach.setAttachSize(rs.getLong("attach_size"));
                 attach.setAttachMIME(rs.getString("attach_mime"));
                 attach.setFileContent(rs.getBytes("attach_file"));
+                return attach;
+            }else{
+                return null;
             }
-            return attach;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
