@@ -1,13 +1,10 @@
 package controller;
 
-import dao.AttachmentDAO;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 
 @WebServlet(name = "AttachController")
@@ -20,13 +17,6 @@ public class AttachController extends HttpServlet {
             return;
         }
         long userId = (long) request.getSession().getAttribute("userId");
-
-        File file=(File)request.getSession().getAttribute("file");
-
-        AttachmentDAO attachmentDAO=new AttachmentDAO();
-        //Haven't figure out how to get name,
-        attachmentDAO.createAttachment("name",file);
-
 
 
     }
