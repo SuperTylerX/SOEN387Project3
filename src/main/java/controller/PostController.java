@@ -65,7 +65,7 @@ public class PostController extends HttpServlet {
         }
 
         PostDAO postdao = new PostDAO();
-        ArrayList posts = postdao.readPosts();
+        ArrayList<Post> posts = postdao.readPosts();
         HashMap<String, Object> res = new HashMap<>();
         res.put("status", 200);
         res.put("data", posts);
@@ -150,7 +150,6 @@ public class PostController extends HttpServlet {
         response.getWriter().write(json);
     }
 
-
     protected String getBodyString(HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
         BufferedReader reader;
@@ -159,7 +158,7 @@ public class PostController extends HttpServlet {
             try {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    sb.append(specailCharFilter(line)).append('\n');
+                    sb.append(specialCharFilter(line)).append('\n');
                 }
                 String body = sb.toString();
                 return body.trim();
@@ -174,7 +173,7 @@ public class PostController extends HttpServlet {
         return "";
     }
 
-    private String specailCharFilter(String input) {
+    private String specialCharFilter(String input) {
         Pattern singleQuotePattern = Pattern.compile("[^\\\\]'");
         Matcher m = singleQuotePattern.matcher(input);
         List<String> singleQuoteList = new ArrayList<String>();
@@ -182,12 +181,11 @@ public class PostController extends HttpServlet {
             singleQuoteList.add(m.group(0));
         }
         for (String temp : singleQuoteList) {
-            String newString = temp.substring(0, 1) + "\\\\" + temp.substring(1);
+            String newString = temp.charAt(0) + "\\\\" + temp.substring(1);
             input = input.replace(temp, newString);
         }
 
         return input;
     }
-
 
 }

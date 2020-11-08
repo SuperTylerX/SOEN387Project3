@@ -84,7 +84,7 @@
                 </div>
                 <div class="content">{{item.postContent}}</div>
                 <a v-if="item.attachment"
-                   :href="'file?attachId=' + item.attachment.attachID + '&postId=' + item.postID">
+                   :href="'file?attachId=' + item.attachment.attachID + '&postId=' + item.postID" target="_blank">
                     <div class="mdui-chip attach-file">
                         <span class="mdui-chip-icon"><i class="mdui-icon material-icons">attach_file</i></span>
                         <span class="mdui-chip-title">{{item.attachment.attachName}}</span>
