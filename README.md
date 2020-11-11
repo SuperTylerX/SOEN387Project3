@@ -1,14 +1,39 @@
 # SOEN387Project2
-This is project2 for SOEN387
-## ## Team information
-Team leader:
-Tianxiang Ying(40075013)
+This is project 2 for SOEN387
+## Team information
+- Tianxiang Ying (40075013)
+- Bowen Yang (40072133)
+- Yanqi Zhang (40050276)
+- Xuan Li (40066717)
 
-Other members: 
-Bowen Yang(40072133)
-Yanqi Zhang(40050276)
-Xuan Li(40066717)
-## ## Description and Release Notes:
+## How to run it
+
+1. Install JDK 8.0 and MySQL 5.6.
+2. Excute the following SQL statement to create database schema.
+
+```sql
+create table if not exists attachment
+(
+    attach_id   int(8) auto_increment primary key references posts (post_id),
+    attach_name varchar(255) null,
+    attach_size int(64)      null,
+    attach_mime varchar(255) null,
+    attach_file mediumblob   null
+);
+
+create table if not exists posts
+(
+    post_id            int(8) auto_increment primary key,
+    post_title         varchar(255)   null,
+    post_content       varchar(10240) null,
+    post_author_id     int(8)         null,
+    post_created_date  bigint(13)     null,
+    post_modified_date bigint(13)     null,
+    post_attach_id     int(8)         null
+);
+```
+
+## Description and Release Notes:
 
 This is a small forum system called Concordia Forum 1.0. Currently, this version does not support user registration, you can only log in with the existing user name and password. The user registration function will be implemented in the next version. After logging in, you can create, delete, search, and modify posts. The forum supports uploading individual attachments when creat and modify posts. The attachment size should be no more than 5M.
 
