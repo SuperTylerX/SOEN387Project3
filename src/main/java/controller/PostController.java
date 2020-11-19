@@ -158,7 +158,7 @@ public class PostController extends HttpServlet {
             try {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    sb.append(specialCharFilter(line)).append('\n');
+                    sb.append(line).append('\n');
                 }
                 String body = sb.toString();
                 return body.trim();

@@ -22,7 +22,7 @@ public class SearchController extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String author = request.getParameter("authorName");
-        long userID = -1;
+        long userID = -2;
         if (author != null) {
             userID = UserManager.getInstance().getUserIdByName(author);
         }
@@ -37,16 +37,18 @@ public class SearchController extends HttpServlet {
         PostDAO postdao = new PostDAO();
 
         ArrayList<Post> posts = new ArrayList<>();
-
-        if (userID != -1 && (startDate == null || endDate == null) && tagArr.length == 0) {
+        if (userID == -1) {
+            String resultJson = arrToSuccessJson(posts);
+            sendInfo(response, resultJson);
+        } else if (userID != -2 && (startDate == null || endDate == null) && tagArr.length == 0) {
             posts = postdao.readPostsByAutherId(userID);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        } else if (userID == -1 && startDate != null && endDate != null && tagArr.length == 0) {
+        } else if (userID == -2 && startDate != null && endDate != null && tagArr.length == 0) {
             posts = postdao.readPostsByDate(Long.parseLong(startDate), Long.parseLong(endDate));
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        } else if (userID == -1 && (startDate == null || endDate == null) && tagArr.length != 0) {
+        } else if (userID == -2 && (startDate == null || endDate == null) && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
                 temp = postdao.readPostsByContent(s);
@@ -55,11 +57,11 @@ public class SearchController extends HttpServlet {
             removeDuplicated(posts);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        } else if (userID != -1 && startDate != null && endDate != null && tagArr.length == 0) {
+        } else if (userID != -2 && startDate != null && endDate != null && tagArr.length == 0) {
             posts = postdao.readPostsByAutherIdAndDate(userID, Long.parseLong(startDate), Long.parseLong(endDate));
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        } else if (userID == -1 && startDate != null && endDate != null && tagArr.length != 0) {
+        } else if (userID == -2 && startDate != null && endDate != null && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
                 temp = postdao.readPostsByContentAndDate(s, Long.parseLong(startDate), Long.parseLong(endDate));
@@ -68,7 +70,7 @@ public class SearchController extends HttpServlet {
             removeDuplicated(posts);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        } else if (userID != -1 && (startDate == null || endDate == null) && tagArr.length != 0) {
+        } else if (userID != -2 && (startDate == null || endDate == null) && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
                 temp = postdao.readPostsByAutherIdAndTag(userID, s);
@@ -77,7 +79,7 @@ public class SearchController extends HttpServlet {
             removeDuplicated(posts);
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
-        } else if (userID != -1 && startDate != null && endDate != null && tagArr.length != 0) {
+        } else if (userID != -2 && startDate != null && endDate != null && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
                 temp = postdao.readPostsByAll(userID, Long.parseLong(startDate), Long.parseLong(endDate), s);

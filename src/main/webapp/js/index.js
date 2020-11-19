@@ -129,7 +129,8 @@ new Vue({
                     self.updatedPost = {
                         postId: postId,
                         title: el.postTitle,
-                        content: el.postContent
+                        content: el.postContent,
+                        fileList: []
                     }
                     if (el.attachment) {
                         self.updatedPost.fileList = [{
@@ -259,8 +260,8 @@ new Vue({
             }).then(function (res) {
                     self.newPost.fileList = [];
                     self.updatedPost.fileList = [];
-                    self.postList.forEach(function (el){
-                        if (el.attachment && el.attachment.attachID === attachId){
+                    self.postList.forEach(function (el) {
+                        if (el.attachment && el.attachment.attachID === attachId) {
                             el.attachment = null;
                         }
                     })
