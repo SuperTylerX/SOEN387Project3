@@ -113,20 +113,19 @@ public class UserManager {
         return null;
     }
 
-//    public ArrayList<Group> findChildren(long groupId) {
-//        ArrayList<Group> _list = new ArrayList<>();
-//        for (Group group : groupList) {
-//            if (group.getGroupParent() == groupId) {
-//                _list.add(group);
-//                _list.addAll(findChildren(group.getGroupId()));
-//                return _list;
-//            }
-//        }
-//        return _list;
-//    }
+    // This method finds all the children and itself
+    public ArrayList<Group> findChildren(long groupId) throws Exception {
+        ArrayList<Group> _list = new ArrayList<>();
+        if (groupId != 1) {
+            _list.add(UserManager.getInstance().getUserGroupById(groupId));
+        }
+        findChildren(groupId, _list);
+        return _list;
+    }
 
 
-    public void findChildren(long groupId, ArrayList<Group> l) throws Exception{
+    // This method only finds children
+    public void findChildren(long groupId, ArrayList<Group> l) throws Exception {
         // if the group is admins
         if (groupId == 1) {
             l.addAll(this.groupList);

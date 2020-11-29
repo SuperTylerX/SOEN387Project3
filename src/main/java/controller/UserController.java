@@ -33,11 +33,8 @@ public class UserController extends HttpServlet {
         // Get the group and children group that belong to the user
         long groupId = user.getUserGroup();
         ArrayList<Group> grouplist = new ArrayList<>();
-        if (groupId != 1) {
-            grouplist.add(UserManager.getInstance().getUserGroupById(groupId));
-        }
         try {
-            UserManager.getInstance().findChildren(groupId, grouplist);
+            grouplist = UserManager.getInstance().findChildren(groupId);
         } catch (Exception e) {
             e.printStackTrace();
         }
