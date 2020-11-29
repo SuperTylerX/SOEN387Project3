@@ -1,5 +1,5 @@
-# SOEN387Project2
-This is project 2 for SOEN387
+# SOEN387Project3
+This is project 3 for SOEN387
 ## Team information
 - Tianxiang Ying (40075013)
 - Bowen Yang (40072133)
