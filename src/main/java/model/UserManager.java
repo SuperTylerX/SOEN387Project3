@@ -17,19 +17,21 @@ public class UserManager {
     public static final String CONFIG_FILE = UserManager.class.getClassLoader().getResource("../../WEB-INF/Users.json").getPath().replace("%20", " ");
 
     private ArrayList<User> userList;
+    private ArrayList<Group> groupList;
 
     private static final UserManager userManager = new UserManager();
 
     private UserManager() {
-        userList = new ArrayList<>();
-        this.loadUserList();
+        this.userList = new ArrayList<>();
+        this.groupList = new ArrayList<>();
+        this.loadUserListAndGroup();
     }
 
     public static UserManager getInstance() {
         return userManager;
     }
 
-    public void loadUserList() {
+    public void loadUserListAndGroup() {
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = null;
@@ -40,15 +42,28 @@ public class UserManager {
             e.printStackTrace();
         }
 
-        JSONArray list = (JSONArray) jsonObject.get("userList");
-        for (Object o : list) {
+        JSONArray userlist = (JSONArray) jsonObject.get("userList");
+        for (Object o : userlist) {
             Map user = (Map) o;
             String username = (String) user.get("userName");
             String password = (String) user.get("userPassword");
             String email = (String) user.get("userEmail");
             long userId = (long) user.get("userId");
-            userList.add(new User(userId, username, email, password));
+            long userGroup = (long) user.get("userGroup");
+            userList.add(new User(userId, username, email, password, userGroup));
         }
+
+        JSONArray grouplist = (JSONArray) jsonObject.get("groupList");
+        for (Object o : grouplist) {
+            Map group = (Map) o;
+            long groupId = (long) group.get("groupId");
+            String groupName = (String) group.get("groupName");
+            long groupParent = (long) group.get("groupParent");
+            groupList.add(new Group(groupId, groupName, groupParent));
+        }
+
+        System.out.println(groupList);
+
     }
 
     public User authUser(String username, String password) {
@@ -78,5 +93,54 @@ public class UserManager {
             }
         }
         return -1;
+    }
+
+    public User getUserById(long id) {
+        for (User user : userList) {
+            if (id == user.getUserId()) {
+                return user.clone();
+            }
+        }
+        return null;
+    }
+
+    public Group getUserGroupById(long id) {
+        for (Group group : groupList) {
+            if (id == group.getGroupId()) {
+                return group.clone();
+            }
+        }
+        return null;
+    }
+
+//    public ArrayList<Group> findChildren(long groupId) {
+//        ArrayList<Group> _list = new ArrayList<>();
+//        for (Group group : groupList) {
+//            if (group.getGroupParent() == groupId) {
+//                _list.add(group);
+//                _list.addAll(findChildren(group.getGroupId()));
+//                return _list;
+//            }
+//        }
+//        return _list;
+//    }
+
+
+    public void findChildren(long groupId, ArrayList<Group> l) throws Exception{
+        // if the group is admins
+        if (groupId == 1) {
+            l.addAll(this.groupList);
+            return;
+        }
+
+        for (Group group : this.groupList) {
+            if (group.getGroupParent() == groupId) {
+                if (l.contains(group)) {
+                    throw new Exception("Circular parent-child definition!!!");
+                }
+                l.add(group);
+                findChildren(group.getGroupId(), l);
+            }
+        }
     }
 }

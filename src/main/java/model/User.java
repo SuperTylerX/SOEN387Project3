@@ -1,17 +1,23 @@
 package model;
 
+import com.google.gson.annotations.Expose;
+
 public class User {
 
+    @Expose
     private long userId;
+    @Expose
     private String userName;
     private String userEmail;
     private String userPassword;
+    private long userGroup;
 
-    public User(long userId, String userName, String userEmail, String userPassword) {
+    public User(long userId, String userName, String userEmail, String userPassword, long userGroup) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+        this.userGroup = userGroup;
     }
 
     public User(User user){
@@ -19,6 +25,7 @@ public class User {
         this.userName = user.userName;
         this.userEmail = user.userEmail;
         this.userPassword = user.userPassword;
+        this.userGroup = user.userGroup;
     }
 
     public User clone(){
@@ -55,5 +62,13 @@ public class User {
 
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
+    }
+
+    public long getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(int userGroup) {
+        this.userGroup = userGroup;
     }
 }

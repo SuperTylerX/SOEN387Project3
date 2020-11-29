@@ -162,7 +162,8 @@
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Tags</label>
-                <input type="text" class="mdui-textfield-input" v-model="searchContent.tags" placeholder="#tag1,#tag2..."/>
+                <input type="text" class="mdui-textfield-input" v-model="searchContent.tags"
+                       placeholder="#tag1,#tag2..."/>
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Start Date</label>
@@ -181,37 +182,7 @@
             </button>
         </div>
     </div>
-    <!-- Update User info -->
-    <%--    <div class="mdui-dialog" id="update-user-dialog">--%>
-    <%--        <div class="mdui-tab mdui-tab-full-width" id="update-user-tabs">--%>
-    <%--            <a href="#email-tab" class="mdui-ripple">Email</a>--%>
-    <%--            <a href="#password-tab" class="mdui-ripple">Password</a>--%>
-    <%--        </div>--%>
-    <%--        <div id="email-tab" class="mdui-p-a-2">--%>
-    <%--            <div class="mdui-textfield">--%>
-    <%--                <i class="mdui-icon material-icons">email</i>--%>
-    <%--                <input class="mdui-textfield-input" type="email" placeholder="Email" v-model="userUpdate.email"/>--%>
-    <%--            </div>--%>
-    <%--            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" mdui-dialog-confirm--%>
-    <%--                    @click="updateEmail">Update--%>
-    <%--            </button>--%>
-    <%--        </div>--%>
-    <%--        <div id="password-tab" class="mdui-p-a-2">--%>
-    <%--            <div class="mdui-textfield">--%>
-    <%--                <i class="mdui-icon material-icons">lock</i>--%>
-    <%--                <input class="mdui-textfield-input" type="password" placeholder="Enter your new password"--%>
-    <%--                       v-model="userUpdate.password"/>--%>
-    <%--            </div>--%>
-    <%--            <div class="mdui-textfield">--%>
-    <%--                <i class="mdui-icon material-icons">lock</i>--%>
-    <%--                <input class="mdui-textfield-input" type="password" placeholder="Enter your new password again"--%>
-    <%--                       v-model="userUpdate.passwordRepeat"/>--%>
-    <%--            </div>--%>
-    <%--            <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" mdui-dialog-confirm--%>
-    <%--                    @click="updatePassword">Update--%>
-    <%--            </button>--%>
-    <%--        </div>--%>
-    <%--    </div>--%>
+
 </div>
 
 <script src="js/mdui.min.js "></script>

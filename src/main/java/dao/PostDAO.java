@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class PostDAO {
 
     public int createPost(Post post, int attachID) {
-
         Connection connection = DBConnection.getConnection();
 
         try {
