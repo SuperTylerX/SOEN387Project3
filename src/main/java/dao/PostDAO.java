@@ -196,7 +196,6 @@ public class PostDAO {
 
     }
 
-
     public ArrayList<Post> readPostsByAutherId(long post_author_id) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
@@ -232,6 +231,54 @@ public class PostDAO {
                 posts.add(p);
             }
             return posts;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public Post readPostsByPostId(int post_id) {
+        Connection connection = DBConnection.getConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where post_id=?;";
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, post_id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Post p = new Post();
+                p.setPostID(rs.getInt("post_id"));
+
+                int authorId = rs.getInt("post_author_id");
+                String username = UserManager.getInstance().getUserNameById(authorId);
+                p.setPostAuthorID(authorId);
+                p.setPostAuthorName(username);
+                p.setPostContent(rs.getString("post_content"));
+                p.setPostCreatedDate(rs.getLong("post_created_date"));
+                p.setPostModifiedDate(rs.getLong("post_modified_date"));
+                p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
+
+                if (rs.getInt("attach_id") != 0) {
+                    Attachment att = new Attachment();
+                    att.setAttachID(rs.getInt("attach_id"));
+                    att.setAttachName(rs.getString("attach_name"));
+                    p.setAttachment(att);
+                }
+                return p;
+            } else {
+                return null;
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

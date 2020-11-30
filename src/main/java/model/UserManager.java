@@ -142,4 +142,20 @@ public class UserManager {
             }
         }
     }
+
+    // check Group Validation
+    public boolean checkGroupValidity(long userID, long postGroupID) throws Exception {
+        Group userGroup = getUserGroupById(userID);
+        long groupID = userGroup.getGroupId();
+        if (groupID == 1)
+            return true;
+
+        ArrayList<Group> validGroups = findChildren(groupID);
+        for (Group g : validGroups) {
+            if (g.getGroupId() == postGroupID)
+                return true;
+        }
+        return false;
+
+    }
 }

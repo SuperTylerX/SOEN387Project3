@@ -45,7 +45,7 @@ public class PostController extends HttpServlet {
         //check if the groupID the user entered is within his authority
         //may need to send back something else...
         try {
-            if(!checkGroupValidity(userId,postGroupID))
+            if(!UserManager.getInstance().checkGroupValidity(userId,postGroupID))
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,20 +201,6 @@ public class PostController extends HttpServlet {
         return input;
     }
 
-    private boolean checkGroupValidity(long userID,long postGroupID) throws Exception {
-        UserManager userManager= UserManager.getInstance();
-        Group userGroup = userManager.getUserGroupById(userID);
-        long groupID = userGroup.getGroupId();
-        if(groupID==1)
-            return true;
-        else{
-            ArrayList<Group> validGroups = userManager.findChildren(groupID);
-            for(Group g : validGroups){
-                if(g.getGroupId()==postGroupID)
-                    return true;
-            }
-            return false;
-        }
-    }
+
 
 }
