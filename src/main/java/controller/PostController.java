@@ -3,7 +3,9 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dao.PostDAO;
+import model.Group;
 import model.Post;
+import model.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,13 +36,23 @@ public class PostController extends HttpServlet {
         long userId = (long) request.getSession().getAttribute("userId");
         String postTitle = request.getParameter("postTitle");
         String postContent = request.getParameter("postContent");
+        long postGroupID = Long.parseLong(request.getParameter("postGroupId")) ;
         int attachId = 0;
         if (request.getParameter("attachId") != null) {
             attachId = Integer.parseInt(request.getParameter("attachId"));
         }
 
+        //check if the groupID the user entered is within his authority
+        //may need to send back something else...
+        try {
+            if(!checkGroupValidity(userId,postGroupID))
+                response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // create post object
-        Post post = new Post(postTitle, postContent, userId);
+        Post post = new Post(postTitle, postContent, userId, postGroupID);
         PostDAO postdao = new PostDAO();
         int postID = postdao.createPost(post, attachId);
 
@@ -122,13 +134,14 @@ public class PostController extends HttpServlet {
         int postId = Integer.parseInt(postInfoMap.get("postId"));
         String postTitle = postInfoMap.get("postTitle");
         String postContent = postInfoMap.get("postContent");
+        long postGroupID = Long.parseLong(postInfoMap.get("postGroupId"));
         int attachId = 0;
         if (postInfoMap.get("attachId") != null) {
             attachId = Integer.parseInt(postInfoMap.get("attachId"));
         }
 
         // create updated post object
-        Post post = new Post(postTitle, postContent, userId);
+        Post post = new Post(postTitle, postContent, userId,postGroupID);
         post.setPostModifiedDate(new Date().getTime());
         PostDAO postdao = new PostDAO();
 
@@ -186,6 +199,22 @@ public class PostController extends HttpServlet {
         }
 
         return input;
+    }
+
+    private boolean checkGroupValidity(long userID,long postGroupID) throws Exception {
+        UserManager userManager= UserManager.getInstance();
+        Group userGroup = userManager.getUserGroupById(userID);
+        long groupID = userGroup.getGroupId();
+        if(groupID==1)
+            return true;
+        else{
+            ArrayList<Group> validGroups = userManager.findChildren(groupID);
+            for(Group g : validGroups){
+                if(g.getGroupId()==postGroupID)
+                    return true;
+            }
+            return false;
+        }
     }
 
 }
