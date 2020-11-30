@@ -1,2 +1,7 @@
 # Project exclude paths
 /target/
+.idea/dataSources/51737182-d8d5-4c0e-9339-748efc51bd14/storage_v2/_src_/schema/information_schema.FNRwLQ.meta
+.idea/dataSources/51737182-d8d5-4c0e-9339-748efc51bd14.xml
+.idea/dataSources.xml
+*.xml
+.idea/dataSources.xml

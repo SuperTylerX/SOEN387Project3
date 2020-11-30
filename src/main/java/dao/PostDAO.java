@@ -16,9 +16,9 @@ public class PostDAO {
         try {
             String query;
             if (attachID == 0) {
-                query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date) VALUES(?, ?, ?, ?, ?)";
+                query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date,post_group_id) VALUES(?, ?, ?, ?, ?, ?)";
             } else {
-                query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date,post_attach_id) VALUES(?, ?, ?, ?, ?, ?)";
+                query = "INSERT INTO posts (post_title,post_content,post_author_id,post_created_date,post_modified_date,post_group_id,post_attach_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
             }
 
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -28,8 +28,9 @@ public class PostDAO {
             ps.setInt(3, (int) post.getPostAuthorID());
             ps.setLong(4, post.getPostCreatedDate());
             ps.setLong(5, post.getPostModifiedDate());
+            ps.setLong(6, post.getPostGroupID());
             if (attachID != 0) {
-                ps.setInt(6, attachID);
+                ps.setInt(7, attachID);
             }
 
             int i = ps.executeUpdate();
@@ -169,6 +170,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();
@@ -219,6 +221,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();
@@ -267,6 +270,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();
@@ -316,6 +320,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();
@@ -364,6 +369,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();
@@ -415,6 +421,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();
@@ -463,6 +470,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();
@@ -514,6 +522,7 @@ public class PostDAO {
                 p.setPostCreatedDate(rs.getLong("post_created_date"));
                 p.setPostModifiedDate(rs.getLong("post_modified_date"));
                 p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
 
                 if (rs.getInt("attach_id") != 0) {
                     Attachment att = new Attachment();

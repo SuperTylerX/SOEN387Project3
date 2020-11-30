@@ -15,18 +15,20 @@ public class Post {
     private long postCreatedDate;
     private long postModifiedDate;
     private Attachment attachment;
+    private long postGroupID;
 
 
     public Post() {
     }
 
     //    This constructor used for first creating a post
-    public Post(String postTitle, String postContent, long postAuthorID) {
+    public Post(String postTitle, String postContent, long postAuthorID, long postGroupID) {
         this.postAuthorID = postAuthorID;
         this.postTitle = postTitle;
         this.postContent = postContent;
         this.postCreatedDate = new Date().getTime();
         this.postModifiedDate = this.postCreatedDate;
+        this.postGroupID = postGroupID;
     }
 
     public int getPostID() {
@@ -92,4 +94,8 @@ public class Post {
     public void setAttachment(Attachment attachment) {
         this.attachment = attachment;
     }
+
+    public Long getPostGroupID() { return postGroupID; }
+
+    public void setPostGroupID(long postGroupID) { this.postGroupID = postGroupID; }
 }
