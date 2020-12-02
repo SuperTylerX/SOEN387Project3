@@ -7,6 +7,7 @@ import model.UserManager;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PostDAO {
 
@@ -199,19 +200,19 @@ public class PostDAO {
     public ArrayList<Post> readPostsByGroup(long[] groupIdToRead) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
-        String groupIdForWhere = "WHERE post_group_id = 0 OR ";
-        for (long g : groupIdToRead) {
-            groupIdForWhere += "post_group_id = " + g + " OR ";
-        }
-        groupIdForWhere = groupIdForWhere.substring(0, groupIdForWhere.lastIndexOf("OR"));
-        System.out.println(groupIdForWhere);
+
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String query = "SELECT * FROM posts LEFT JOIN attachment ON post_attach_id=attach_id " + groupIdForWhere + "ORDER BY post_modified_date DESC limit ?;";
+            String placeHolders = String.join(", ", Collections.nCopies(groupIdToRead.length, "?"));
+            String query = "SELECT * FROM posts LEFT JOIN attachment ON post_attach_id=attach_id WHERE post_group_id IN (" + placeHolders + ") ORDER BY post_modified_date DESC limit ?;";
 //            System.out.println(query);
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, postNum);
+            int i = 1;
+            for (long groupId : groupIdToRead) {
+                ps.setLong(i++, groupId);
+            }
+            ps.setInt(i, postNum);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -234,9 +235,7 @@ public class PostDAO {
                     att.setAttachName(rs.getString("attach_name"));
                     p.setAttachment(att);
                 }
-
                 posts.add(p);
-
             }
             return posts;
         } catch (SQLException e) {
@@ -249,7 +248,6 @@ public class PostDAO {
                 e.printStackTrace();
             }
         }
-
     }
 
     public ArrayList<Post> readPostsByAutherId(long post_author_id) {
