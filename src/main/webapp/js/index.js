@@ -27,7 +27,8 @@ new Vue({
             newPost: {
                 title: "",
                 content: "",
-                fileList: []
+                fileList: [],
+                groupId: 0
             },
             updatedPost: {
                 postId: null,
@@ -43,13 +44,9 @@ new Vue({
             },
             userInfo: {
                 userName: "",
-                userId: ""
+                userId: "",
+                userGroup: []
             }
-            // userUpdate: {
-            //     email: "",
-            //     password: "",
-            //     passwordRepeat: ""
-            // }
         }
     },
     computed: {},
@@ -81,6 +78,7 @@ new Vue({
             var data = {
                 postTitle: self.newPost.title,
                 postContent: self.newPost.content,
+                postGroup: self.newPost.groupId
             }
             if (this.newPost.fileList[0]) {
                 data.attachId = this.newPost.fileList[0].attachId;
@@ -288,46 +286,35 @@ new Vue({
                     text: "OK"
                 }]
             })
-            // this.tab.handleUpdate()
-        },
-        // updateEmail: function () {
-        // },
-        // updatePassword: function () {
-        //     if (this.userUpdate.password === this.userUpdate.passwordRepeat) {
-        //         mdui.dialog({
-        //             title: "Update Successfully",
-        //             content: "The password is succefully updated.",
-        //             buttons: [{
-        //                 text: "OK"
-        //             }]
-        //         })
-        //     } else {
-        //         mdui.dialog({
-        //             title: "Update Failed",
-        //             content: "The password entered twice is different.",
-        //             buttons: [{
-        //                 text: "OK"
-        //             }]
-        //         })
-        //     }
-        // }
+        }
     },
     mounted: function () {
         var self = this;
-        this.userInfo = window.userInfo;
-        this.tab = new mdui.Tab('#update-user-tabs');
-        axios.get("post").then(function (res) {
-            var result = res.data;
-            if (result.status === 200) {
-                self.postList = result.data.map(function (el) {
-                    if (el.postCreatedDate === el.postModifiedDate) {
-                        el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s');
-                    } else {
-                        el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s') + " (Modified)";
-                    }
-                    return el;
-                });
+        // Get user info
+
+        axios.get("user").then(function (res) {
+            if (res.status === 200 && res.data.status === 200) {
+                self.userInfo.userName = res.data.data.userName
+                self.userInfo.userId = res.data.data.userId
+                self.userInfo.userGroup = [{
+                    groupId: 0,
+                    groupName: "public"
+                }].concat(res.data.data.userGroup)
             }
+            axios.get("post").then(function (res) {
+                var result = res.data;
+                if (result.status === 200) {
+                    self.postList = result.data.map(function (el) {
+                        if (el.postCreatedDate === el.postModifiedDate) {
+                            el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s');
+                        } else {
+                            el.postPublishedDate = new Date(el.postModifiedDate).format('yyyy-MM-dd h:m:s') + " (Modified)";
+                        }
+                        return el;
+                    });
+                }
+            })
         })
+
     }
 })

@@ -76,7 +76,7 @@ public class PostController extends HttpServlet {
             return;
         }
 
-        long groupID = (long) (request.getSession().getAttribute("postGroupId"));
+        long groupID = (long) (request.getSession().getAttribute("userGroupId"));
 //        long groupID = 3;
         try {
             // generate an array of group ID that allows to be viewed
