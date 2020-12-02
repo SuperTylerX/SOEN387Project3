@@ -21,16 +21,7 @@
 
 
 <body class="mdui-theme-layout-light mdui-theme-accent-red mdui-theme-primary-red">
-<%
-    long userId = (long) session.getAttribute("userId");
-    String userName = UserManager.getInstance().getUserNameById(userId);
-%>
-<script>
-    var userInfo = {
-        userId: <%=userId%>,
-        userName: "<%=userName%>"
-    }
-</script>
+
 
 <div id="vue">
     <!-- Header -->
@@ -73,6 +64,9 @@
                                 class="mdui-menu-item-icon mdui-icon material-icons">edit</i>Edit</a></li>
                         <li class="mdui-menu-item" @click="deletePost(item.postID)"><a class="mdui-ripple delete-btn"><i
                                 class="mdui-menu-item-icon mdui-icon material-icons">delete</i>Delete</a></li>
+                        <li class="mdui-menu-item"><a class="mdui-ripple delete-btn"
+                                                      :href="'postdownload?postId=' + item.postID"><i
+                                class="mdui-menu-item-icon mdui-icon material-icons">file_download</i>Download</a></li>
                     </ul>
                 </div>
                 <div class="mdui-card-primary">
@@ -103,12 +97,19 @@
 
             <div class="mdui-textfield mdui-textfield-floating-label">
                 <label class="mdui-textfield-label">Title</label>
-                <input type="text" class="mdui-textfield-input" v-model="newPost.title"></input>
+                <input type="text" class="mdui-textfield-input" v-model="newPost.title"/>
             </div>
             <div class="mdui-textfield mdui-textfield-floating-label">
                 <label class="mdui-textfield-label">Content</label>
                 <textarea class="mdui-textfield-input" rows="5" v-model="newPost.content"></textarea>
             </div>
+
+
+            <select class="mdui-select" v-model="newPost.groupId">
+                <option :value="item.groupId" v-for="(item,index) in userInfo.userGroup">
+                    {{item.groupName}}
+                </option>
+            </select>
 
             <el-upload action="file" :file-list="newPost.fileList" :limit="1"
                        :on-remove="removeAttach" :on-success="submitFileCallback">
@@ -130,7 +131,7 @@
 
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Title</label>
-                <input type="text" class="mdui-textfield-input" v-model="updatedPost.title"></input>
+                <input type="text" class="mdui-textfield-input" v-model="updatedPost.title"/>
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Content</label>

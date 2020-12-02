@@ -199,19 +199,22 @@ public class PostDAO {
     public ArrayList<Post> readPostsByGroup(long[] groupIdToRead) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
-        String groupIdForWhere = "WHERE post_group_id = 0 OR ";
-        for (long g : groupIdToRead) {
-            groupIdForWhere += "post_group_id = " + g + " OR ";
+
+        StringBuilder postGroupIds = new StringBuilder();
+        for (int i = 0; i < groupIdToRead.length; i++) {
+            postGroupIds.append(groupIdToRead[i]);
+            if (i != groupIdToRead.length - 1) {
+                postGroupIds.append(",");
+            }
         }
-        groupIdForWhere = groupIdForWhere.substring(0, groupIdForWhere.lastIndexOf("OR"));
-        System.out.println(groupIdForWhere);
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String query = "SELECT * FROM posts LEFT JOIN attachment ON post_attach_id=attach_id " + groupIdForWhere + "ORDER BY post_modified_date DESC limit ?;";
-//            System.out.println(query);
+            String query = "SELECT * FROM posts LEFT JOIN attachment ON post_attach_id=attach_id WHERE FIND_IN_SET( post_group_id, ? ) ORDER BY post_modified_date DESC limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, postNum);
+            ps.setString(1, postGroupIds.toString());
+            ps.setInt(2, postNum);
+            System.out.println(ps.toString());
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {

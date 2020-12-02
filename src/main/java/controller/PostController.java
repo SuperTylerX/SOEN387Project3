@@ -76,13 +76,14 @@ public class PostController extends HttpServlet {
             return;
         }
 
-        long groupID = (long) (request.getSession().getAttribute("postGroupId"));
+        long groupID = (long) (request.getSession().getAttribute("userGroupId"));
 //        long groupID = 3;
         try {
             // generate an array of group ID that allows to be viewed
             ArrayList<Group> validGroups = UserManager.getInstance().findChildren(groupID);
-            long[] groupIDToRead = new long[validGroups.size()];
-            int i = 0;
+            long[] groupIDToRead = new long[validGroups.size() + 1];
+            groupIDToRead[0] = 0;
+            int i = 1;
             for (Group g : validGroups) {
                 groupIDToRead[i++] = g.getGroupId();
             }
