@@ -7,7 +7,6 @@ import model.UserManager;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class PostDAO {
 
@@ -201,18 +200,21 @@ public class PostDAO {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
 
+        StringBuilder postGroupIds = new StringBuilder();
+        for (int i = 0; i < groupIdToRead.length; i++) {
+            postGroupIds.append(groupIdToRead[i]);
+            if (i != groupIdToRead.length - 1) {
+                postGroupIds.append(",");
+            }
+        }
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String placeHolders = String.join(", ", Collections.nCopies(groupIdToRead.length, "?"));
-            String query = "SELECT * FROM posts LEFT JOIN attachment ON post_attach_id=attach_id WHERE post_group_id IN (" + placeHolders + ") ORDER BY post_modified_date DESC limit ?;";
-//            System.out.println(query);
+            String query = "SELECT * FROM posts LEFT JOIN attachment ON post_attach_id=attach_id WHERE FIND_IN_SET( post_group_id, ? ) ORDER BY post_modified_date DESC limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            int i = 1;
-            for (long groupId : groupIdToRead) {
-                ps.setLong(i++, groupId);
-            }
-            ps.setInt(i, postNum);
+            ps.setString(1, postGroupIds.toString());
+            ps.setInt(2, postNum);
+            System.out.println(ps.toString());
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -235,7 +237,9 @@ public class PostDAO {
                     att.setAttachName(rs.getString("attach_name"));
                     p.setAttachment(att);
                 }
+
                 posts.add(p);
+
             }
             return posts;
         } catch (SQLException e) {
@@ -248,6 +252,7 @@ public class PostDAO {
                 e.printStackTrace();
             }
         }
+
     }
 
     public ArrayList<Post> readPostsByAutherId(long post_author_id) {

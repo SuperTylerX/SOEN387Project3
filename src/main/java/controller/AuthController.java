@@ -36,6 +36,7 @@ public class AuthController extends HttpServlet {
             // Set Session
             HttpSession session = request.getSession();
             session.setAttribute("userId", user.getUserId());
+            session.setAttribute("userGroupId", user.getUserGroup());
             // Set Response
             resJson.put("status", 200);
             PrintWriter out = response.getWriter();

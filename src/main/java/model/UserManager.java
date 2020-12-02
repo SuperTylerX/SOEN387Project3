@@ -24,14 +24,19 @@ public class UserManager {
     private UserManager() {
         this.userList = new ArrayList<>();
         this.groupList = new ArrayList<>();
-        this.loadUserListAndGroup();
+        try {
+            this.loadUserListAndGroup();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
     public static UserManager getInstance() {
         return userManager;
     }
 
-    public void loadUserListAndGroup() {
+    public void loadUserListAndGroup() throws Exception {
 
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObject = null;
@@ -62,7 +67,20 @@ public class UserManager {
             groupList.add(new Group(groupId, groupName, groupParent));
         }
 
-        System.out.println(groupList);
+        // check non-existing group
+        boolean valid = false;
+        for (Group g : this.groupList) {
+            for (Group g2 : this.groupList) {
+                if (g.getGroupParent() == g2.getGroupId() || g.getGroupParent() == 0) {
+                    valid = true;
+                    break;
+                }
+            }
+            if (!valid) {
+                throw new Exception("None Parent Group Detected!");
+            }
+
+        }
 
     }
 
@@ -104,7 +122,7 @@ public class UserManager {
         return null;
     }
 
-    public Group getUserGroupById(long id) {
+    public Group getUserGroupByGroupId(long id) {
         for (Group group : groupList) {
             if (id == group.getGroupId()) {
                 return group.clone();
@@ -126,7 +144,7 @@ public class UserManager {
     public ArrayList<Group> findChildren(long groupId) throws Exception {
         ArrayList<Group> _list = new ArrayList<>();
         if (groupId != 1) {
-            _list.add(UserManager.getInstance().getUserGroupById(groupId));
+            _list.add(UserManager.getInstance().getUserGroupByGroupId(groupId));
         }
         findChildren(groupId, _list);
         return _list;
@@ -154,9 +172,9 @@ public class UserManager {
 
     // check Group Validation
     public boolean checkGroupValidity(long userID, long postGroupID) throws Exception {
-        Group userGroup = getUserGroupById(userID);
+        Group userGroup = getUserGroupByGroupId(userID);
         long groupID = userGroup.getGroupId();
-        if (groupID == 1)
+        if (groupID == 1 || groupID == 0)
             return true;
 
         ArrayList<Group> validGroups = findChildren(groupID);
