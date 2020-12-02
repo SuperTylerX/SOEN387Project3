@@ -16,6 +16,7 @@ public class Post {
     private long postModifiedDate;
     private Attachment attachment;
     private long postGroupID;
+    private String postGroupName;
 
 
     public Post() {
@@ -98,4 +99,8 @@ public class Post {
     public Long getPostGroupID() { return postGroupID; }
 
     public void setPostGroupID(long postGroupID) { this.postGroupID = postGroupID; }
+
+    public String getPostGroupName() { return postGroupName; }
+
+    public void setPostGroupName(String postGroupName) { this.postGroupName = postGroupName; }
 }

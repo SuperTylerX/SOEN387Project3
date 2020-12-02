@@ -196,6 +196,62 @@ public class PostDAO {
 
     }
 
+    public ArrayList<Post> readPostsByGroup(long[] groupIdToRead) {
+        ArrayList<Post> posts = new ArrayList<>();
+        Connection connection = DBConnection.getConnection();
+        String groupIdForWhere = "WHERE post_group_id = 0 OR ";
+        for (long g : groupIdToRead) {
+            groupIdForWhere += "post_group_id = " + g + " OR ";
+        }
+        groupIdForWhere = groupIdForWhere.substring(0, groupIdForWhere.lastIndexOf("OR"));
+        System.out.println(groupIdForWhere);
+        try {
+            int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
+            Statement stmt = connection.createStatement();
+            String query = "SELECT * FROM posts LEFT JOIN attachment ON post_attach_id=attach_id " + groupIdForWhere + "ORDER BY post_modified_date DESC limit ?;";
+//            System.out.println(query);
+            PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, postNum);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Post p = new Post();
+                p.setPostID(rs.getInt("post_id"));
+
+                int authorId = rs.getInt("post_author_id");
+                String username = UserManager.getInstance().getUserNameById(authorId);
+                p.setPostAuthorID(authorId);
+                p.setPostAuthorName(username);
+                p.setPostContent(rs.getString("post_content"));
+                p.setPostCreatedDate(rs.getLong("post_created_date"));
+                p.setPostModifiedDate(rs.getLong("post_modified_date"));
+                p.setPostTitle(rs.getString("post_title"));
+                p.setPostGroupID(rs.getLong("post_group_id"));
+
+                if (rs.getInt("attach_id") != 0) {
+                    Attachment att = new Attachment();
+                    att.setAttachID(rs.getInt("attach_id"));
+                    att.setAttachName(rs.getString("attach_name"));
+                    p.setAttachment(att);
+                }
+
+                posts.add(p);
+
+            }
+            return posts;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     public ArrayList<Post> readPostsByAutherId(long post_author_id) {
         ArrayList<Post> posts = new ArrayList<>();
         Connection connection = DBConnection.getConnection();
