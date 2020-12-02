@@ -113,6 +113,15 @@ public class UserManager {
         return null;
     }
 
+    public String getGroupNameByGroupId(long groupId) {
+        for (Group group : groupList) {
+            if (groupId == group.getGroupId()) {
+                return group.getGroupName();
+            }
+        }
+        return null;
+    }
+
     // This method finds all the children and itself
     public ArrayList<Group> findChildren(long groupId) throws Exception {
         ArrayList<Group> _list = new ArrayList<>();

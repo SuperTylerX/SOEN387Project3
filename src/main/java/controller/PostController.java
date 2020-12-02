@@ -36,7 +36,7 @@ public class PostController extends HttpServlet {
         long userId = (long) request.getSession().getAttribute("userId");
         String postTitle = request.getParameter("postTitle");
         String postContent = request.getParameter("postContent");
-        long postGroupID = Long.parseLong(request.getParameter("postGroupId")) ;
+        long postGroupID = Long.parseLong(request.getParameter("postGroupId"));
         int attachId = 0;
         if (request.getParameter("attachId") != null) {
             attachId = Integer.parseInt(request.getParameter("attachId"));
@@ -45,7 +45,7 @@ public class PostController extends HttpServlet {
         //check if the groupID the user entered is within his authority
         //may need to send back something else...
         try {
-            if(!UserManager.getInstance().checkGroupValidity(userId,postGroupID))
+            if (!UserManager.getInstance().checkGroupValidity(userId, postGroupID))
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,14 +76,36 @@ public class PostController extends HttpServlet {
             return;
         }
 
-        PostDAO postdao = new PostDAO();
-        ArrayList<Post> posts = postdao.readPosts();
-        HashMap<String, Object> res = new HashMap<>();
-        res.put("status", 200);
-        res.put("data", posts);
-        Gson gson = new Gson();
-        String resultJson = gson.toJson(res);
-        sendInfo(response, resultJson);
+        long groupID = (long) (request.getSession().getAttribute("postGroupId"));
+//        long groupID = 3;
+        try {
+            // generate an array of group ID that allows to be viewed
+            ArrayList<Group> validGroups = UserManager.getInstance().findChildren(groupID);
+            long[] groupIDToRead = new long[validGroups.size()];
+            int i = 0;
+            for (Group g : validGroups) {
+                groupIDToRead[i++] = g.getGroupId();
+            }
+
+            PostDAO postdao = new PostDAO();
+            ArrayList<Post> posts = postdao.readPostsByGroup(groupIDToRead);
+
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
+
+            HashMap<String, Object> res = new HashMap<>();
+            res.put("status", 200);
+            res.put("data", posts);
+            Gson gson = new Gson();
+            String resultJson = gson.toJson(res);
+            sendInfo(response, resultJson);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -141,12 +163,12 @@ public class PostController extends HttpServlet {
         }
 
         // create updated post object
-        Post post = new Post(postTitle, postContent, userId,postGroupID);
+        Post post = new Post(postTitle, postContent, userId, postGroupID);
         post.setPostModifiedDate(new Date().getTime());
         PostDAO postdao = new PostDAO();
 
         HashMap<String, Integer> resulthm = new HashMap<>();
-        if (postdao.updatePost(post, postId, attachId)) {
+        if (postdao.checkValidOwner(userId, postId) && postdao.updatePost(post, postId, attachId)) {
             resulthm.put("status", 200);
         } else {
             resulthm.put("status", 403);
@@ -200,7 +222,6 @@ public class PostController extends HttpServlet {
 
         return input;
     }
-
 
 
 }
