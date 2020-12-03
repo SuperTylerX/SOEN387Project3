@@ -132,6 +132,9 @@ public class UserManager {
     }
 
     public String getGroupNameByGroupId(long groupId) {
+        if (groupId == 0) {
+            return "public";
+        }
         for (Group group : groupList) {
             if (groupId == group.getGroupId()) {
                 return group.getGroupName();
