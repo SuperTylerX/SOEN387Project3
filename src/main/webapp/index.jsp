@@ -54,7 +54,7 @@
     <section class="container">
         <div class="post-list">
             <div class="mdui-shadow-2 post-item" v-for="item in postList">
-                <div class="mdui-card-menu" v-if="userInfo.userId == item.postAuthorID">
+                <div class="mdui-card-menu" v-if="userInfo.userId == item.postAuthorID || userInfo.isAdmin">
                     <button class="mdui-btn mdui-btn-icon mdui-text-color-black" :id="'post-'+ item.postID +'-btn'"
                             @click="moreOptions(item.postID)">
                         <i class="mdui-icon material-icons">more_vert</i>
@@ -73,6 +73,7 @@
                     <div class="mdui-card-primary-title">{{item.postTitle}}</div>
                     <div class="mdui-card-primary-subtitle">
                         <span class="item"><i class="el-icon-user"></i>{{item.postAuthorName}}</span>
+                        <span class="item"><i class="el-icon-chat-line-square"></i>{{item.postGroupName}}</span>
                         <span class="item"><i class="el-icon-time"></i>{{item.postPublishedDate}}</span>
                     </div>
                 </div>
