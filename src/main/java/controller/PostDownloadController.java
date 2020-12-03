@@ -31,7 +31,7 @@ public class PostDownloadController extends HttpServlet {
 
         //search post
         PostDAO postdao = new PostDAO();
-        Post post = postdao.readPostsByPostId(postId);
+        Post post = postdao.getPostsByPostId(postId);
         long groupId = post.getPostGroupID();
         try {
             if (UserManager.getInstance().checkGroupValidity(userId, groupId)) {
