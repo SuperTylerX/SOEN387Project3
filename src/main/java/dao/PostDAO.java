@@ -175,6 +175,7 @@ public class PostDAO {
                     Attachment att = new Attachment();
                     att.setAttachID(rs.getInt("attach_id"));
                     att.setAttachName(rs.getString("attach_name"));
+                    att.setAttachSize(rs.getLong("attach_size"));
                     p.setAttachment(att);
                 }
                 return p;
@@ -381,7 +382,7 @@ public class PostDAO {
         try {
 
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where FIND_IN_SET( post_group_id, ? ) and post_content LIKE ? or post_title LIKE ? order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where FIND_IN_SET( post_group_id, ? ) and (post_content LIKE ? or post_title LIKE ?) order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, postGroupIds.toString());
             ps.setString(2, "%" + tag + "%");
@@ -496,7 +497,7 @@ public class PostDAO {
         try {
 
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (FIND_IN_SET( post_group_id, ? ) and post_content LIKE ? or post_title LIKE ? and post_modified_date between ? And ?) order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (FIND_IN_SET( post_group_id, ? ) and (post_content LIKE ? or post_title LIKE ?) and post_modified_date between ? And ?) order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, postGroupIds.toString());
             ps.setString(2, "%" + tag + "%");
@@ -554,7 +555,7 @@ public class PostDAO {
         try {
             int postNum = Integer.parseInt(AppConfig.getInstance().POST_NUM);
             Statement stmt = connection.createStatement();
-            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (FIND_IN_SET( post_group_id, ? ) and post_author_id=? and post_content LIKE ? or post_title LIKE ?) order by post_modified_date desc limit ?;";
+            String query = "select * from posts LEFT JOIN attachment on post_attach_id=attach_id where (FIND_IN_SET( post_group_id, ? ) and post_author_id=? and (post_content LIKE ? or post_title LIKE ?)) order by post_modified_date desc limit ?;";
             PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, postGroupIds.toString());
             ps.setLong(2, post_author_id);
