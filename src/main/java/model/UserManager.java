@@ -122,6 +122,15 @@ public class UserManager {
         return null;
     }
 
+    public long getUserGroupIdByUserID(long id) {
+        for (User user : userList) {
+            if (id==user.getUserId()) {
+                return user.getUserGroup();
+            }
+        }
+        return -1;
+    }
+
     public Group getUserGroupByGroupId(long id) {
         for (Group group : groupList) {
             if (id == group.getGroupId()) {
@@ -175,8 +184,7 @@ public class UserManager {
 
     // check Group Validation
     public boolean checkGroupValidity(long userID, long postGroupID) throws Exception {
-        Group userGroup = getUserGroupByGroupId(userID);
-        long groupID = userGroup.getGroupId();
+        long groupID = getUserGroupIdByUserID(userID);
         if (groupID == 1 || groupID == 0)
             return true;
 
