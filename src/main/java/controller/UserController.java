@@ -17,7 +17,8 @@ import java.util.HashMap;
 @WebServlet(name = "UserController")
 public class UserController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        return;
     }
 
     //    Get the user information
@@ -48,6 +49,7 @@ public class UserController extends HttpServlet {
         JsonElement userElement = gson.toJsonTree(user);
         JsonElement groupElement = gson.toJsonTree(grouplist);
         userElement.getAsJsonObject().add("userGroup", groupElement);
+        userElement.getAsJsonObject().addProperty("isAdmin", user.getUserGroup() == 1);
         res.put("data", userElement);
 
         String resultJson = gson.toJson(res);

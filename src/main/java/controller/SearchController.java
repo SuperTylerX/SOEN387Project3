@@ -2,6 +2,7 @@ package controller;
 
 import com.google.gson.Gson;
 import dao.PostDAO;
+import model.Group;
 import model.Post;
 import model.UserManager;
 
@@ -21,6 +22,33 @@ public class SearchController extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //check ID
+        if (request.getSession().getAttribute("userId") == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+        // get parameter
+        long groupID = (long) (request.getSession().getAttribute("userGroupId"));
+
+        // generate an array of group ID that allows to be viewed
+        ArrayList<Group> validGroups = null;
+        try {
+            validGroups = UserManager.getInstance().findChildren(groupID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        long[] groupIDToRead = new long[validGroups.size() + 1];
+        groupIDToRead[0] = 0;
+        int i = 1;
+        for (Group g : validGroups) {
+            groupIDToRead[i++] = g.getGroupId();
+        }
+
+        //get data for search needs
+        int attachId = 0;
+        if (request.getParameter("attachId") != null) {
+            attachId = Integer.parseInt(request.getParameter("attachId"));
+        }
         String author = request.getParameter("authorName");
         long userID = -2;
         if (author != null) {
@@ -34,63 +62,101 @@ public class SearchController extends HttpServlet {
         if (tags != null) {
             tagArr = tags.split(",");
         }
+        //create dao and search methods
         PostDAO postdao = new PostDAO();
-
         ArrayList<Post> posts = new ArrayList<>();
         if (userID == -1) {
+            //not a correct user
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
         } else if (userID != -2 && (startDate == null || endDate == null) && tagArr.length == 0) {
-            posts = postdao.readPostsByAutherId(userID);
+            posts = postdao.readPostsByAutherId(userID, groupIDToRead);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
         } else if (userID == -2 && startDate != null && endDate != null && tagArr.length == 0) {
-            posts = postdao.readPostsByDate(Long.parseLong(startDate), Long.parseLong(endDate));
+            posts = postdao.readPostsByDate(Long.parseLong(startDate), Long.parseLong(endDate), groupIDToRead);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
         } else if (userID == -2 && (startDate == null || endDate == null) && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
-                temp = postdao.readPostsByContent(s);
+                temp = postdao.readPostsByContent(s, groupIDToRead);
                 posts.addAll(temp);
             }
             removeDuplicated(posts);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
+
         } else if (userID != -2 && startDate != null && endDate != null && tagArr.length == 0) {
-            posts = postdao.readPostsByAutherIdAndDate(userID, Long.parseLong(startDate), Long.parseLong(endDate));
+            posts = postdao.readPostsByAutherIdAndDate(userID, Long.parseLong(startDate), Long.parseLong(endDate), groupIDToRead);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
+
         } else if (userID == -2 && startDate != null && endDate != null && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
-                temp = postdao.readPostsByContentAndDate(s, Long.parseLong(startDate), Long.parseLong(endDate));
+                temp = postdao.readPostsByContentAndDate(s, Long.parseLong(startDate), Long.parseLong(endDate), groupIDToRead);
                 posts.addAll(temp);
             }
             removeDuplicated(posts);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
+
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
         } else if (userID != -2 && (startDate == null || endDate == null) && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
-                temp = postdao.readPostsByAutherIdAndTag(userID, s);
+                temp = postdao.readPostsByAutherIdAndTag(userID, s, groupIDToRead);
                 posts.addAll(temp);
             }
             removeDuplicated(posts);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
+
         } else if (userID != -2 && startDate != null && endDate != null && tagArr.length != 0) {
             for (String s : tagArr) {
                 ArrayList<Post> temp = new ArrayList<>();
-                temp = postdao.readPostsByAll(userID, Long.parseLong(startDate), Long.parseLong(endDate), s);
+                temp = postdao.readPostsByAll(userID, Long.parseLong(startDate), Long.parseLong(endDate), s, groupIDToRead);
                 posts.addAll(temp);
             }
             removeDuplicated(posts);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
+
         } else {
             // no limit return all posts
-            posts = postdao.readPosts();
+            posts = postdao.readPostsByGroup(groupIDToRead);
+            // add group name to each post
+            for (Post p : posts) {
+                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+            }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
         }

@@ -45,7 +45,8 @@ new Vue({
             userInfo: {
                 userName: "",
                 userId: "",
-                userGroup: []
+                userGroup: [],
+                isAdmin: false
             }
         }
     },
@@ -78,7 +79,7 @@ new Vue({
             var data = {
                 postTitle: self.newPost.title,
                 postContent: self.newPost.content,
-                postGroup: self.newPost.groupId
+                postGroupId: self.newPost.groupId
             }
             if (this.newPost.fileList[0]) {
                 data.attachId = this.newPost.fileList[0].attachId;
@@ -101,7 +102,11 @@ new Vue({
                         "postAuthorID": self.userInfo.userId,
                         "postAuthorName": self.userInfo.userName,
                         "postPublishedDate": new Date().format('yyyy-MM-dd h:m:s'),
-                        "postContent": self.newPost.content
+                        "postContent": self.newPost.content,
+                        "postGroupID": self.newPost.groupId,
+                        "postGroupName": self.userInfo.userGroup.filter(group =>
+                            group.groupId === self.newPost.groupId
+                        )[0].groupName
                     }
 
                     if (self.newPost.fileList.length === 1) {
@@ -114,7 +119,8 @@ new Vue({
                     self.newPost = {
                         title: "",
                         content: "",
-                        fileList: []
+                        fileList: [],
+                        groupId: 0
                     }
                 }
             })
@@ -294,12 +300,13 @@ new Vue({
 
         axios.get("user").then(function (res) {
             if (res.status === 200 && res.data.status === 200) {
-                self.userInfo.userName = res.data.data.userName
-                self.userInfo.userId = res.data.data.userId
+                self.userInfo.userName = res.data.data.userName;
+                self.userInfo.userId = res.data.data.userId;
                 self.userInfo.userGroup = [{
                     groupId: 0,
                     groupName: "public"
-                }].concat(res.data.data.userGroup)
+                }].concat(res.data.data.userGroup);
+                self.userInfo.isAdmin = res.data.data.isAdmin;
             }
             axios.get("post").then(function (res) {
                 var result = res.data;

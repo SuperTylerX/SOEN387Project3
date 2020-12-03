@@ -18,9 +18,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @WebServlet(name = "PostController")
 public class PostController extends HttpServlet {
@@ -45,8 +42,10 @@ public class PostController extends HttpServlet {
         //check if the groupID the user entered is within his authority
         //may need to send back something else...
         try {
-            if (!UserManager.getInstance().checkGroupValidity(userId, postGroupID))
+            if (!UserManager.getInstance().checkGroupValidity(userId, postGroupID)) {
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,7 +76,7 @@ public class PostController extends HttpServlet {
         }
 
         long groupID = (long) (request.getSession().getAttribute("userGroupId"));
-//        long groupID = 3;
+
         try {
             // generate an array of group ID that allows to be viewed
             ArrayList<Group> validGroups = UserManager.getInstance().findChildren(groupID);
@@ -117,6 +116,7 @@ public class PostController extends HttpServlet {
             return;
         }
         long userId = (long) request.getSession().getAttribute("userId");
+        long userGroupId = (long) request.getSession().getAttribute("userGroupId");
         PostDAO postdao = new PostDAO();
 
         String body = getBodyString(request);
@@ -124,7 +124,7 @@ public class PostController extends HttpServlet {
         int postId = Integer.parseInt(arr[1].trim());
 
         HashMap<String, Integer> resulthm = new HashMap<>();
-        if (postdao.checkValidOwner(userId, postId) && postdao.deletePost(postId)) {
+        if ((userGroupId == 1 || postdao.checkValidOwner(userId, postId)) && postdao.deletePost(postId)) {
             resulthm.put("status", 200);
         } else {
             resulthm.put("status", 403);
@@ -142,6 +142,7 @@ public class PostController extends HttpServlet {
             return;
         }
         long userId = (long) request.getSession().getAttribute("userId");
+        long userGroupId = (long) request.getSession().getAttribute("userGroupId");
 
         // retrieve request
         String body = getBodyString(request);
@@ -157,19 +158,18 @@ public class PostController extends HttpServlet {
         int postId = Integer.parseInt(postInfoMap.get("postId"));
         String postTitle = postInfoMap.get("postTitle");
         String postContent = postInfoMap.get("postContent");
-        long postGroupID = Long.parseLong(postInfoMap.get("postGroupId"));
         int attachId = 0;
         if (postInfoMap.get("attachId") != null) {
             attachId = Integer.parseInt(postInfoMap.get("attachId"));
         }
 
         // create updated post object
-        Post post = new Post(postTitle, postContent, userId, postGroupID);
+        Post post = new Post(postTitle, postContent, userId);
         post.setPostModifiedDate(new Date().getTime());
         PostDAO postdao = new PostDAO();
 
         HashMap<String, Integer> resulthm = new HashMap<>();
-        if (postdao.checkValidOwner(userId, postId) && postdao.updatePost(post, postId, attachId)) {
+        if ((userGroupId == 1 || postdao.checkValidOwner(userId, postId)) && postdao.updatePost(post, postId, attachId)) {
             resulthm.put("status", 200);
         } else {
             resulthm.put("status", 403);
@@ -208,21 +208,5 @@ public class PostController extends HttpServlet {
         }
         return "";
     }
-
-    private String specialCharFilter(String input) {
-        Pattern singleQuotePattern = Pattern.compile("[^\\\\]'");
-        Matcher m = singleQuotePattern.matcher(input);
-        List<String> singleQuoteList = new ArrayList<String>();
-        while (m.find()) {
-            singleQuoteList.add(m.group(0));
-        }
-        for (String temp : singleQuoteList) {
-            String newString = temp.charAt(0) + "\\\\" + temp.substring(1);
-            input = input.replace(temp, newString);
-        }
-
-        return input;
-    }
-
 
 }
