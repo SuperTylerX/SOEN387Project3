@@ -185,7 +185,7 @@ public class UserManager {
     // check Group Validation
     public boolean checkGroupValidity(long userID, long postGroupID) throws Exception {
         long groupID = getUserGroupIdByUserID(userID);
-        if (groupID == 1 || groupID == 0)
+        if (groupID == 1 || postGroupID == 0)
             return true;
 
         ArrayList<Group> validGroups = findChildren(groupID);
