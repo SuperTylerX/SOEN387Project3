@@ -1,7 +1,6 @@
 package controller;
 
 import model.User;
-import model.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.json.simple.JSONArray;
+import model1.UserManagerFactory;
 import org.json.simple.JSONObject;
 
 @WebServlet(name = "AuthController")
@@ -30,7 +29,7 @@ public class AuthController extends HttpServlet {
 
         response.setContentType("application/json; charset=utf-8");
 
-        User user = UserManager.getInstance().authUser(username, password);
+        User user = UserManagerFactory.getInstance().authUser(username, password);
         JSONObject resJson = new JSONObject();
         if (user != null) {
             // Set Session
