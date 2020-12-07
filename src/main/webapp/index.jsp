@@ -1,4 +1,3 @@
-<%@ page import="model.UserManager" %>
 <%
     if (session.getAttribute("userId") == null) {
         response.sendRedirect("login.html");
@@ -98,15 +97,15 @@
 
             <div class="mdui-textfield mdui-textfield-floating-label">
                 <label class="mdui-textfield-label">Title</label>
-                <input type="text" class="mdui-textfield-input" v-model="newPost.title"/>
+                <input type="text" class="mdui-textfield-input" v-model.model="newPost.title"/>
             </div>
             <div class="mdui-textfield mdui-textfield-floating-label">
                 <label class="mdui-textfield-label">Content</label>
-                <textarea class="mdui-textfield-input" rows="5" v-model="newPost.content"></textarea>
+                <textarea class="mdui-textfield-input" rows="5" v-model.model="newPost.content"></textarea>
             </div>
 
 
-            <select class="mdui-select" v-model="newPost.groupId">
+            <select class="mdui-select" v-model.model="newPost.groupId">
                 <option :value="item.groupId" v-for="(item,index) in userInfo.userGroup">
                     {{item.groupName}}
                 </option>
@@ -132,11 +131,11 @@
 
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Title</label>
-                <input type="text" class="mdui-textfield-input" v-model="updatedPost.title"/>
+                <input type="text" class="mdui-textfield-input" v-model.model="updatedPost.title"/>
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Content</label>
-                <textarea class="mdui-textfield-input" rows="5" v-model="updatedPost.content"></textarea>
+                <textarea class="mdui-textfield-input" rows="5" v-model.model="updatedPost.content"></textarea>
             </div>
 
             <el-upload action="file" :file-list="updatedPost.fileList" :limit="1"
@@ -160,20 +159,20 @@
 
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Author Name</label>
-                <input type="text" class="mdui-textfield-input" v-model="searchContent.authorName"/>
+                <input type="text" class="mdui-textfield-input" v-model.model="searchContent.authorName"/>
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Tags</label>
-                <input type="text" class="mdui-textfield-input" v-model="searchContent.tags"
+                <input type="text" class="mdui-textfield-input" v-model.model="searchContent.tags"
                        placeholder="#tag1,#tag2..."/>
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">Start Date</label>
-                <input type="date" class="mdui-textfield-input" v-model="searchContent.startDate"/>
+                <input type="date" class="mdui-textfield-input" v-model.model="searchContent.startDate"/>
             </div>
             <div class="mdui-textfield">
                 <label class="mdui-textfield-label">End Date</label>
-                <input type="date" class="mdui-textfield-input" v-model="searchContent.endDate"/>
+                <input type="date" class="mdui-textfield-input" v-model.model="searchContent.endDate"/>
             </div>
             <button type="button" class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-red submit-btn"
                     mdui-dialog-confirm @click="searchPost"

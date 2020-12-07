@@ -6,11 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SOEN387Project2" />
+        <module name="UserManagerLib" />
+        <module name="SharedModel" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="SharedModel" target="1.8" />
       <module name="SOEN387Project2" target="1.8" />
+      <module name="UserManagerLib" target="7" />
     </bytecodeTargetLevel>
   </component>
 </project>

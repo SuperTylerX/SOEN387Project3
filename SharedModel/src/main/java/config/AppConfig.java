@@ -14,6 +14,7 @@ public class AppConfig {
     public String DB_USER;
     public String DB_PASSWORD;
     public String POST_NUM;
+    public String USERMANAGER_CLASS;
 
     private static AppConfig config;
 
@@ -41,6 +42,7 @@ public class AppConfig {
             DB_USER = prop.getProperty("DB_USER");
             DB_PASSWORD = prop.getProperty("DB_PASSWORD");
             POST_NUM= prop.getProperty("POST_NUM");
+            USERMANAGER_CLASS = prop.getProperty("USERMANAGER_CLASS");
 
         } catch (IOException e) {
             e.printStackTrace();

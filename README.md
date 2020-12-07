@@ -41,7 +41,7 @@ This is a small forum system called Concordia Forum 1.0. Currently, this version
 This project is a Java Servlet project. Tomcat needs to be configured to run the project, you need to install and correctly configure [Tomcat 9.0](https://tomcat.apache.org/download-90.cgi) or above version for your IDE. For the project SDK, please install [Java 1.8](https://www.oracle.com/ca-en/java/technologies/javase/javase-jdk8-downloads.html) or the above version.
 
 
-We use the MVC structure for the project. The model is responsible for maintaining application data and business logic. The view is a user interface of the application, which displays the data. The controller handles user's requests and renders appropriate View with Model data. Please check the code for more details.
+We use the MVC structure for the project. The model.model is responsible for maintaining application data and business logic. The view is a user interface of the application, which displays the data. The controller handles user's requests and renders appropriate View with Model data. Please check the code for more details.
 
 
 

@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import dao.PostDAO;
 import model.Group;
 import model.Post;
-import model.UserManager;
+import model1.UserManagerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -42,7 +42,7 @@ public class PostController extends HttpServlet {
         //check if the groupID the user entered is within his authority
         //may need to send back something else...
         try {
-            if (!UserManager.getInstance().checkGroupValidity(userId, postGroupID)) {
+            if (!UserManagerFactory.getInstance().checkGroupValidity(userId, postGroupID)) {
                 response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
                 return;
             }
@@ -79,7 +79,7 @@ public class PostController extends HttpServlet {
 
         try {
             // generate an array of group ID that allows to be viewed
-            ArrayList<Group> validGroups = UserManager.getInstance().findChildren(groupID);
+            ArrayList<Group> validGroups = UserManagerFactory.getInstance().findChildren(groupID);
             long[] groupIDToRead = new long[validGroups.size() + 1];
             groupIDToRead[0] = 0;
             int i = 1;
@@ -92,7 +92,7 @@ public class PostController extends HttpServlet {
 
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
 
             HashMap<String, Object> res = new HashMap<>();

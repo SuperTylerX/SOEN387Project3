@@ -2,8 +2,7 @@ package controller;
 
 import dao.PostDAO;
 import model.Post;
-import model.User;
-import model.UserManager;
+import model1.UserManagerFactory;
 import utils.XMLTransformer;
 
 import javax.servlet.ServletException;
@@ -34,7 +33,7 @@ public class PostDownloadController extends HttpServlet {
         Post post = postdao.getPostsByPostId(postId);
         long groupId = post.getPostGroupID();
         try {
-            if (UserManager.getInstance().checkGroupValidity(userId, groupId)) {
+            if (UserManagerFactory.getInstance().checkGroupValidity(userId, groupId)) {
                 XMLTransformer transformer = XMLTransformer.getInstance();
                 String str = transformer.toXMLString(post);
                 response.setContentType("application/xml");
