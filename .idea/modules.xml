@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../BusinessLayer/BusinessLayer.iml" filepath="$PROJECT_DIR$/../BusinessLayer/BusinessLayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/SOEN387Project2.iml" filepath="$PROJECT_DIR$/SOEN387Project2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../UserManagerLib/UserManagerLib.iml" filepath="$PROJECT_DIR$/../UserManagerLib/UserManagerLib.iml" />
     </modules>
   </component>
 </project>

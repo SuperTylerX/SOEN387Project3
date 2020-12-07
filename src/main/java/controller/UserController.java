@@ -3,7 +3,7 @@ package controller;
 import com.google.gson.*;
 import model.Group;
 import model.User;
-import model.UserManager;
+import model1.UserManagerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,13 +29,13 @@ public class UserController extends HttpServlet {
         }
 
         long userId = (long) request.getSession().getAttribute("userId");
-        User user = UserManager.getInstance().getUserById(userId);
+        User user = UserManagerFactory.getInstance().getUserById(userId);
 
         // Get the group and children group that belong to the user
         long groupId = user.getUserGroup();
         ArrayList<Group> grouplist = new ArrayList<>();
         try {
-            grouplist = UserManager.getInstance().findChildren(groupId);
+            grouplist = UserManagerFactory.getInstance().findChildren(groupId);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -3,7 +3,7 @@ package dao;
 import config.AppConfig;
 import model.Attachment;
 import model.Post;
-import model.UserManager;
+import model1.UserManagerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -162,7 +162,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -222,7 +222,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -280,7 +280,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -337,7 +337,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -395,7 +395,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -452,7 +452,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -512,7 +512,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -569,7 +569,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));
@@ -629,7 +629,7 @@ public class PostDAO {
                 p.setPostID(rs.getInt("post_id"));
 
                 int authorId = rs.getInt("post_author_id");
-                String username = UserManager.getInstance().getUserNameById(authorId);
+                String username = UserManagerFactory.getInstance().getUserNameById(authorId);
                 p.setPostAuthorID(authorId);
                 p.setPostAuthorName(username);
                 p.setPostContent(rs.getString("post_content"));

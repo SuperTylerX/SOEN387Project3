@@ -1,17 +1,13 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="SOEN387Project2:war exploded">
-    <output-path>$PROJECT_DIR$/target/SOEN387Project3-1.0-SNAPSHOT</output-path>
-    <properties id="maven-jee-properties">
-      <options>
-        <exploded>true</exploded>
-        <module>SOEN387Project2</module>
-        <packaging>war</packaging>
-      </options>
-    </properties>
+    <output-path>$PROJECT_DIR$/out/artifacts/SOEN387Project2_war_exploded</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="SOEN387Project2" />
+          <element id="module-output" name="BusinessLayer" />
+          <element id="module-output" name="UserManagerLib" />
+          <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: com.thoughtworks.xstream:xstream:1.2.2" />
@@ -25,9 +21,6 @@
           <element id="library" level="project" name="Maven: commons-fileupload:commons-fileupload:1.4" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.8.0" />
         </element>
-      </element>
-      <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/SOEN387Project3-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="SOEN387Project2/web/Web" />
     </root>

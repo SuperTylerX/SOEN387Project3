@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import dao.PostDAO;
 import model.Group;
 import model.Post;
-import model.UserManager;
+import model1.UserManagerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,7 +33,7 @@ public class SearchController extends HttpServlet {
         // generate an array of group ID that allows to be viewed
         ArrayList<Group> validGroups = null;
         try {
-            validGroups = UserManager.getInstance().findChildren(groupID);
+            validGroups = UserManagerFactory.getInstance().findChildren(groupID);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class SearchController extends HttpServlet {
         String author = request.getParameter("authorName");
         long userID = -2;
         if (author != null) {
-            userID = UserManager.getInstance().getUserIdByName(author);
+            userID = UserManagerFactory.getInstance().getUserIdByName(author);
         }
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
@@ -73,7 +73,7 @@ public class SearchController extends HttpServlet {
             posts = postdao.readPostsByAutherId(userID, groupIDToRead);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
@@ -81,7 +81,7 @@ public class SearchController extends HttpServlet {
             posts = postdao.readPostsByDate(Long.parseLong(startDate), Long.parseLong(endDate), groupIDToRead);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
@@ -94,7 +94,7 @@ public class SearchController extends HttpServlet {
             removeDuplicated(posts);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
@@ -103,7 +103,7 @@ public class SearchController extends HttpServlet {
             posts = postdao.readPostsByAutherIdAndDate(userID, Long.parseLong(startDate), Long.parseLong(endDate), groupIDToRead);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
@@ -117,7 +117,7 @@ public class SearchController extends HttpServlet {
             removeDuplicated(posts);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
 
             String resultJson = arrToSuccessJson(posts);
@@ -131,7 +131,7 @@ public class SearchController extends HttpServlet {
             removeDuplicated(posts);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
@@ -145,7 +145,7 @@ public class SearchController extends HttpServlet {
             removeDuplicated(posts);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
@@ -155,7 +155,7 @@ public class SearchController extends HttpServlet {
             posts = postdao.readPostsByGroup(groupIDToRead);
             // add group name to each post
             for (Post p : posts) {
-                p.setPostGroupName(UserManager.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
+                p.setPostGroupName(UserManagerFactory.getInstance().getGroupNameByGroupId(p.getPostGroupID()));
             }
             String resultJson = arrToSuccessJson(posts);
             sendInfo(response, resultJson);
