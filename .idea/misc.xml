@@ -8,10 +8,12 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../UserManagerLib/pom.xml" />
+        <option value="$PROJECT_DIR$/../BusinessLayer/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/SharedModel/pom.xml" />
         <option value="$PROJECT_DIR$/UserManagerLib/pom.xml" />
       </set>
     </option>
