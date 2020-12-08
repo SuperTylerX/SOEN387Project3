@@ -1,0 +1,54 @@
+{
+  "userList": [
+    {
+      "userId": 1,
+      "userName": "tianxiang",
+      "userEmail": "XXX@XXX.com",
+      "userPassword": "ab36e4910bc92ee62b59088b2b587e9a7ec085d023be265d1cfcf044b8d80941",
+      "userGroup": 1
+    },
+    {
+      "userId": 2,
+      "userName": "bowen",
+      "userEmail": "XXX@XXX.com",
+      "userPassword": "794a87b3a7b4710b5bb186cfad145c60d6571a2b611f52aeeb8246599cdcd28c",
+      "userGroup": 2
+    },
+    {
+      "userId": 3,
+      "userName": "yanqi",
+      "userEmail": "XXX@XXX.com",
+      "userPassword": "023c49a707a4df602acd2e7fb1148d9a1004573f41afa097511c44ef435a32eb",
+      "userGroup": 7
+    },
+    {
+      "userId": 4,
+      "userName": "xuan",
+      "userEmail": "XXX@XXX.com",
+      "userPassword": "155a1f57e9470657d8a67a126b3b2868b79e1ffd668cc097eb51d271c440e181",
+      "userGroup": 4
+    }
+  ],
+  "groupList": [
+    {
+      "groupId": 1,
+      "groupName": "admins",
+      "groupParent": 0
+    },
+    {
+      "groupId": 2,
+      "groupName": "concordia",
+      "groupParent": 0
+    },
+    {
+      "groupId": 3,
+      "groupName": "encs",
+      "groupParent": 2
+    },
+    {
+      "groupId": 4,
+      "groupName": "soen387",
+      "groupParent": 3
+    }
+  ]
+}
