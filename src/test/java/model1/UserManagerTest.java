@@ -8,7 +8,7 @@ import java.io.File;
 public class UserManagerTest {
 
     @Test(expected = Exception.class)
-    public void undefinedGroupTest() throws Exception{
+    public void undefinedGroupTest() throws Exception {
         String path = "src/test/resources/undefinedGroupTest.json";
         File file = new File(path);
         String absolutePath = file.getAbsolutePath();
@@ -18,7 +18,7 @@ public class UserManagerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void undefinedUserTest() throws Exception{
+    public void undefinedUserTest() throws Exception {
         String path = "src/test/resources/undefinedUserTest.json";
         File file = new File(path);
         String absolutePath = file.getAbsolutePath();
@@ -28,7 +28,7 @@ public class UserManagerTest {
 
 
     @Test(expected = Exception.class)
-    public void nonExistingParentTest() throws Exception{
+    public void nonExistingParentTest() throws Exception {
         String path = "src/test/resources/nonExistingParentTest.json";
         File file = new File(path);
         String absolutePath = file.getAbsolutePath();
@@ -37,7 +37,7 @@ public class UserManagerTest {
     }
 
     @Test(expected = Exception.class)
-    public void circularParentChildTest() throws Exception{
+    public void circularParentChildTest() throws Exception {
         String path = "src/test/resources/circularParentChildTest.json";
         File file = new File(path);
         String absolutePath = file.getAbsolutePath();
